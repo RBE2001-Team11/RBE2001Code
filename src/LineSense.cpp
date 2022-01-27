@@ -4,23 +4,22 @@ class LineSense
 {
 
 private:
-    // ESP32AnalogRead leftSensor;
-
     //  ESP32AnalogRead rightSensor;
 
     //port for left sensor
-    const int leftPort = 36;
+    const int leftPort = A2; //TODO
     //port for right sensor
-    const int rightPort = 39;
+    const int rightPort = A0; //TODO
 
 public:
     /**
     *  attaches the line sensor. Must call in main class
+    * //TODO maybe dont need
     */
     void attach()
     {
-        leftSensor.attach(leftPort);
-        rightSensor.attach(rightPort);
+        // leftSensor.attach(leftPort);
+        // rightSensor.attach(rightPort);
     }
 
     /**
@@ -28,7 +27,8 @@ public:
      */
     float getLeft()
     {
-        return leftSensor.readVoltage();
+        return analogRead(leftPort);
+        // return leftSensor.readVoltage();
     }
 
     /**
@@ -36,7 +36,8 @@ public:
      */
     float getRight()
     {
-        return rightSensor.readVoltage();
+        return analogRead(rightPort);
+        //return rightSensor.readVoltage();
     }
 
     /**
