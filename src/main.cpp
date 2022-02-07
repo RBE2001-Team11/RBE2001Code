@@ -1,17 +1,22 @@
 #include <Arduino.h>
 #include <wpi-32u4-lib.h>
-#include <Hardware.h>
+#include <MyDrive.h>
+#include <LineSensor.h>
 
-Hardware robot;
+Chassis chassis;
+
+MyDrive drive;
+
+LineSensor lSense;
 
 void setup()
 {
 
-  robot.init();
+  chassis.init();
   // put your setup code here, to run once:
 }
 
 void loop()
 {
-  robot.drive.setEffort(100);
+  drive.followLine(lSense.getDifference());
 }

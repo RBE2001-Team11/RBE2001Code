@@ -1,7 +1,11 @@
-//
+
+#pragma once
 #include <wpi-32u4-lib.h>
 #include <RemoteConstants.h>
 //#define PI 3.14159265358979323846
+
+#ifndef MYDRIVE_H
+#define MYDRIVE_H
 
 class MyDrive
 {
@@ -74,6 +78,8 @@ private:
     //end constantsssss+++++++++++++++++++++++++++++++++++++++++++
 
 public:
+    MyDrive();
+
     boolean turn(float degrees, float speed);
     void turnContinuous(int direct, float speed);
     boolean driveInches(float inches, float speed);
@@ -81,9 +87,10 @@ public:
     void setEffort(float effort);
     void setSpeed(float speed);
     boolean driveTo(float targetDist, float curDist);
-    void followLine(float error, float leftSense, float rightSense);
+    void followLine(float error);
     boolean driveTillLine(float speed, float leftSense, float rightSense);
     boolean lineFollowTillLine(float leftSense, float rightSense, float error);
     boolean lineFollowToTargetDistance(float leftSense, float rightSense, float error, float curDist, float targetDist);
     boolean alignToLine(int direct, float leftSense, float rightSense);
 };
+#endif

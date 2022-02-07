@@ -71,7 +71,7 @@ void BlueMotor::setEffort(int effort, bool clockwise)
 
 float getRPM()
 {
-    return ((newValue - oldValue) / 270) / (time * 1000);
+    return ((newValue - oldValue) / 270) / (time / 1000 / 60);
 }
 
 void BlueMotor::moveTo(long target) //Move to this encoder position within the specified

@@ -2,7 +2,6 @@
 #include <wpi-32u4-lib.h>
 #include <RemoteConstants.h>
 #include <MyDrive.h>
-#include <Hardware.h>
 //#define PI 3.14159265358979323846
 
 MyDrive::MyDrive()
@@ -54,7 +53,7 @@ boolean MyDrive::driveInches(float inches, float speed)
 {
     //TODO
     //degrees for each wheel to move
-    float moveDegrees = (inches / (2 * PI * (WHEEL_DIAMETER / 2))) * 360;
+    //float moveDegrees = (inches / (2 * PI * (WHEEL_DIAMETER / 2))) * 360;
 
     chassis.driveFor(inches, speed, true);
     //move
@@ -73,7 +72,7 @@ boolean MyDrive::driveInches(float inches, float speed)
 boolean MyDrive::driveCentimeters(float centi, float speed)
 {
     //degrees for each wheel to move
-    float moveDegrees = (centi / (2 * PI * ((WHEEL_DIAMETER / CENTI_CONV) / 2))) * 360;
+    //float moveDegrees = (centi / (2 * PI * ((WHEEL_DIAMETER / CENTI_CONV) / 2))) * 360;
 
     chassis.driveFor(centi / CENTI_CONV, speed, true);
     //move
@@ -136,8 +135,9 @@ boolean MyDrive::driveTo(float targetDist, float curDist)
      * @param leftSense the current value of left Sensor 
      * @param rightSense current value of the right sensor
      */
-void MyDrive::followLine(float error, float leftSense, float rightSense)
+void MyDrive::followLine(float error)
 {
+
     float leftEffort = LINE_BASE_SPEED + (error * LINE_PROP);
     float rightEffort = LINE_BASE_SPEED - (error * LINE_PROP);
 
@@ -180,7 +180,7 @@ boolean MyDrive::lineFollowTillLine(float leftSense, float rightSense, float err
         return true;
     }
     //keep following line
-    followLine(error, leftSense, rightSense);
+    followLine(error);
     return false;
 }
 
@@ -200,7 +200,7 @@ boolean MyDrive::lineFollowToTargetDistance(float leftSense, float rightSense, f
     {
         return true;
     }
-    followLine(error, leftSense, rightSense);
+    followLine(error);
     return false;
 }
 

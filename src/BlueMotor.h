@@ -1,5 +1,7 @@
 #pragma once
 
+#ifndef BLUEMOTOR_H;
+#define BLUEMOTOR_H
 class BlueMotor
 {
 public:
@@ -21,3 +23,4 @@ private:
     const int ENCB = 1;
     const float kP = .5f;
 };
+#endif
