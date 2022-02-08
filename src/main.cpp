@@ -38,6 +38,11 @@ void updateValues()
   //curDistCM = ultra.getDistanceCM();
 }
 
+boolean run(boolean side)
+{
+  return false;
+}
+
 void loop()
 {
 
@@ -50,8 +55,4 @@ void loop()
   }
 
   drive.followLine(lSense.getDifference());
-}
-
-boolean run(boolean side)
-{
 }
