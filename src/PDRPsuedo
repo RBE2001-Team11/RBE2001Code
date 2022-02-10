@@ -25,91 +25,166 @@ run(isRight, isFirst){
     switch(runState){
         case 1
             //return to intersection facing away from roof
+            if(isFirst){
+                pickUpPanelRoof(side);
+                case 3
+            }
+            else{
+                movePanelPickUp(side);
+                case 2
+            }
+        case 2
             pickUpPanelRoof(side);
-        case 2 
+        case 3 
             placePanelPlat(side);
-        case 3
+        case 4
             //return to start position w/ this one
             pickUpPanelPlat(side);
-        case 4
-            placePanelRoof(side);
         case 5
+            placePanelRoof(side);
+        case 6
         //end in starting position
             driveToOtherSide(side);
             return true;
     }
 }
 
+movePanelPickUp(side){
+    switch(pickRoofState){
+        case 1
+             if(right){
+                turn(90);
+            }else{
+                turnT(-90);
+            }
+        case 1
+            lineFollowToTargetDistance(distance);
+            moveGripper(pickUpPosition);
+        case 2
+            drive(distToPickUp);
+            return true;    
+    }
+
+}
+
 pickUpPanelRoof(side){
 
+    switch(pickRoofState){
+       case 1
+            flashLed();
+            waitForInput();
+        case 3
+            closeGripper();
+        case 4
+            moveGripper(higher);
+        case 5
+            drive(backUpDistance);
+        case 6
+            turn(180);
+        return true;       
+    }
 }
 
 placePanelRoof(side){
-
+    case 1
+            lineFollowToTargetDistance(distance);
+            moveGripper(placeRoofPosition);
+        case 2
+            drive(distToPickUp);
+        case 3
+            moveGripper(placeRoofPosition);
+        case 4
+            openGripper();
+        case 5
+            drive(backUpDistance);
+        case 6
+            turn(180);
+        case 7 
+            if(followLineTillIntersection){
+                return true;
+            }
 }
 
-placePanelPlat(side){
+placePanelPlat(side){\
 
+    switch(placePlatState){
+        case 1
+            drive(2);
+        case 2
+            if(right){
+                turn(-90);
+            }else{
+                turnT(90);
+            }
+        case 3
+            lineFollowToTargetDistance(distance);
+        case 4
+            moveGripper(platPosition);
+        case 5
+            openGripper()
+        case 6
+            if(drive(-distance) && moveGripper(middlePosition)){
+                return true;
+            }
+    }
 }
 
 pickUpPanelPlat(side){
-
+    switch(pickPlatState){
+        case 1
+            drive(distance);
+            moveGripper(platPosition);
+        case 2
+            flashLed();
+            waitForInput();
+            closeGripper();
+        case 3
+            drive(-distance);
+            moveGripper(middlePosition);
+        case 4 
+            turn(180);
+        case 5
+            followLineTillIntersection();
+        case 6 
+            drive(2);
+        case 7
+            if(right){
+                turn(90);
+            }else{
+                turnT(-90);
+            }
+        case 8
+            drive(shortDistance);
+            return true;
+    }
 }
 
 driveToOtherSide(side){
 
-}
-
-
-//maybe junk stuff
-case 1
-//go to roof
-    driveWithUltra(distFromRoof);
-    moveGripper(upPosition)
-
-case 2
-    closeGripper()
-   
-case 3
-    flashLed()
-    if(signal){
+    switch(switchSidesState){
+        case 1
+            drive(distancePassRoof);
+        case 2
+          if(right){
+                turn(-90);
+            }else{
+                turn(90);
+            }
+        case 3
+            drive(distance);
         case 4
+             if(right){
+                turn(-90);
+            }else{
+                turn(90);
+            }
+        case 5 
+            driveTillIntersection()
+        case 6
+            drive(2);
+            return true;
+
+            
     }
 
-case 4
-//remove panel
-    raiseGripper()
-
-case 5
-    drive(-distance)
-
-case 6
-    turn(180);
-case 7
-    driveTillIntersection()
-case 8
-    //center robot on intersection
-    drive(2)
-case 9
-    if(left side)
-    turnTillLine(right)
-    else
-    turnTillLine(left)
-case 10
-    driveWithUltra(distFromPlatform)
-case 11
-    lowerGripper()
-case 12
-    openGripper()
-case 13
-    drive(-distance)
-case 14
-    if(firstRun){
-        if(driveToOtherSide(isRight)){
-            return true
-        }
-    }
-    else{
-        return true;
-    }
-  
+}
