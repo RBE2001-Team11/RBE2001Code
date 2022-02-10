@@ -9,12 +9,12 @@ MyDrive drive;
 
 LineSensor lSense;
 
-//START sensor value variables
+// START sensor value variables
 float leftSense;
 float rightSense;
 float error;
 
-//ultrasonic
+// ultrasonic
 float curDistIN;
 float curDistCM;
 
@@ -33,13 +33,14 @@ void updateValues()
   rightSense = lSense.getRight();
   error = lSense.getDifference();
 
-  //ultrasonic
-  //curDistIN = ultra.getDistanceIN();
-  //curDistCM = ultra.getDistanceCM();
+  // ultrasonic
+  // curDistIN = ultra.getDistanceIN();
+  // curDistCM = ultra.getDistanceCM();
 }
 
 boolean run(boolean side)
 {
+
   return false;
 }
 

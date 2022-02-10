@@ -1,0 +1,115 @@
+
+//psuedo loop code
+void loop{
+    //stop if button hit
+    while(running){
+      if(stop button hit){
+        running = false
+        setEfforts(0)
+         }
+
+    while(side = NULL, and isFirst = NULL){
+        getButtonPress()
+        side = buttonPressed;
+        isFirst = buttonPressed;
+        }
+
+        run(side, isFirst);
+    }
+}
+
+
+run(isRight, isFirst){
+//starting near the intersection facing the roof
+
+    switch(runState){
+        case 1
+            //return to intersection facing away from roof
+            pickUpPanelRoof(side);
+        case 2 
+            placePanelPlat(side);
+        case 3
+            //return to start position w/ this one
+            pickUpPanelPlat(side);
+        case 4
+            placePanelRoof(side);
+        case 5
+        //end in starting position
+            driveToOtherSide(side);
+            return true;
+    }
+}
+
+pickUpPanelRoof(side){
+
+}
+
+placePanelRoof(side){
+
+}
+
+placePanelPlat(side){
+
+}
+
+pickUpPanelPlat(side){
+
+}
+
+driveToOtherSide(side){
+
+}
+
+
+//maybe junk stuff
+case 1
+//go to roof
+    driveWithUltra(distFromRoof);
+    moveGripper(upPosition)
+
+case 2
+    closeGripper()
+   
+case 3
+    flashLed()
+    if(signal){
+        case 4
+    }
+
+case 4
+//remove panel
+    raiseGripper()
+
+case 5
+    drive(-distance)
+
+case 6
+    turn(180);
+case 7
+    driveTillIntersection()
+case 8
+    //center robot on intersection
+    drive(2)
+case 9
+    if(left side)
+    turnTillLine(right)
+    else
+    turnTillLine(left)
+case 10
+    driveWithUltra(distFromPlatform)
+case 11
+    lowerGripper()
+case 12
+    openGripper()
+case 13
+    drive(-distance)
+case 14
+    if(firstRun){
+        if(driveToOtherSide(isRight)){
+            return true
+        }
+    }
+    else{
+        return true;
+    }
+  

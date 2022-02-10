@@ -29,23 +29,17 @@ private:
     const float FIND_BAG_DEAD = 5.0f;
 
     //base follow line speed
-    const float LINE_BASE_SPEED = .22 * 300;
+    const float LINE_BASE_SPEED = 75;
 
     //Kp for following the line
-    const float LINE_PROP = .25f;
+    const float LINE_PROP = .09f;
 
     //voltage value for determining if a sensor is over the line
-    const float LINE_SENSE_BLACK = 800;
+    const float LINE_SENSE_BLACK = 700;
 
     //max distance that the ultra will care about while scanning for a bag
     const float MAX_DIST = 25.0f;
-
-    //speed to turn while scanning for object in degrees per second
-    const float SCAN_SPEED = 270.0f;
-
-    //degrees per second to move in teleop
-    const float TELEOP_SPEED = 180.0f;
-
+    
     //medium drive speed
     const float DRIVE_SPEED_MED = 180.0f;
 
