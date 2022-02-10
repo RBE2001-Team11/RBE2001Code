@@ -1,5 +1,6 @@
 
 #include <MyDrive.h>
+
 //#define PI 3.14159265358979323846
 
 MyDrive::MyDrive()
@@ -237,5 +238,10 @@ boolean MyDrive::alignToLine(int direct, float leftSense, float rightSense)
     }
     // keep turning
     turnContinuous(direct, TURN_SPEED_MED);
+    return false;
+}
+
+boolean MyDrive::movePanelPickUp(boolean side)
+{
     return false;
 }

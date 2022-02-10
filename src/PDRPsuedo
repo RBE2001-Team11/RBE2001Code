@@ -1,21 +1,51 @@
 
 //psuedo loop code
 void loop{
-    //stop if button hit
-    while(running){
-      if(stop button hit){
-        running = false
-        setEfforts(0)
-         }
-
-    while(side = NULL, and isFirst = NULL){
-        getButtonPress()
-        side = buttonPressed;
-        isFirst = buttonPressed;
-        }
-
-        run(side, isFirst);
+     while (allowRun == true)
+  {
+    if (buttons.getStopButton())
+    {
+      allowRun = false;
+      drive.setEffort(0);
+      motor.setEffort(0);
     }
+
+    if (run())
+    {
+      allowRun = false;
+    }
+  }
+  if (allowRun == false)
+  {
+    startRobot();
+  }
+}
+
+void startRobot()
+{
+  switch (buttons.getStartButton())
+  {
+  case 1:
+    side = RIGHT;
+    robotRun = FIRST_ROBOT;
+    allowRun = true;
+    break;
+  case 2:
+    side = RIGHT;
+    robotRun = SECOND_ROBOT;
+    allowRun = true;
+    break;
+  case 3:
+    side = LEFT;
+    robotRun = FIRST_ROBOT;
+    allowRun = true;
+    break;
+  case 4:
+    side = LEFT;
+    robotRun = SECOND_ROBOT;
+    allowRun = true;
+    break;
+  }
 }
 
 
@@ -25,7 +55,6 @@ boolean run(isRight, isFirst){
         case 1
             //return to intersection facing away from roof
             if(isFirst){
-                pickUpPanelRoof(side);
                 case 3
             }
             else{

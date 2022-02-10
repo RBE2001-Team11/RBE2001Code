@@ -1,6 +1,6 @@
 #pragma once
 
-#ifndef BLUEMOTOR_H;
+#ifndef BLUEMOTOR_H
 #define BLUEMOTOR_H
 class BlueMotor
 {

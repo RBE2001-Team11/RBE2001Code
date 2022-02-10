@@ -1,0 +1,217 @@
+1. loop(){
+    //only run code if boolean allowRun is true
+   while (allowRun == true)
+  {
+    if (buttons.getStopButton())
+    {
+    //if robot receives stop Button stop
+      allowRun = false;
+     stopEverything;
+    }
+    //run main statemachine
+    if (run())
+    {
+      allowRun = false;
+    }
+  }
+  //wait for button to start
+  if (allowRun == false)
+  {
+    startRobot();
+  }
+}
+
+1.5. boolean runs(side, robotNumber){
+//starting near the intersection facing the roof
+    switch(runState){
+        case 1
+            //return to intersection facing away from roof
+            if(isFirst){
+                case 3
+            }
+            else{
+                movePanelPickUp(side);
+                case 2
+            }
+        case 2
+            pickUpPanelRoof(side);
+        case 3 
+            placePanelPlat(side);
+        case 4
+            //return to start position w/ this one
+            pickUpPanelPlat(side);
+        case 5
+            placePanelRoof(side);
+        case 6
+        //end in starting position
+            driveToOtherSide(side);
+            return true;
+    }
+}
+
+
+2.void startRobot()
+{
+  switch (buttons.getStartButton())
+  {
+  case 1:
+    right and first
+    break;
+  case 2:
+    right and second
+    allowRun = true;
+    break;
+  case 3:
+    left and first
+    allowRun = true;
+    break;
+  case 4:
+    left and second
+    allowRun = true;
+    break;
+  }
+}
+
+//for second run when the robot is facing judges
+//move the robot is preparation to pick up a panel
+3.boolean movePanelPickUp(side){
+    switch(pickRoofState){
+        case INIT_TURN
+             if(right){
+                1.turn right 90
+            }else{
+                2.turn left 90
+            }
+        case GO_TO_ROOF
+            1.lineFollowToTargetDistance(distance);
+            2.moveGripper(pickUpPosition);
+        case MOVE_TO_PANEL
+            1.drive so panel is in gripper
+            return true;    
+    }
+}
+
+//robot has already driven up to the panel and only has to grasp it
+4.boolean pickUpPanelRoof(side){
+    switch(pickRoofState){
+       case WAIT
+            1. flash the led 
+            2.wait for remote input
+        case CLOSE_GRIP
+            1.closeGripper();
+        case REMOVE_PANEL
+            1.move the four-bar
+        case BACKUP
+            1. back away from roof
+        case TURN_AROUND
+            1.turn 180 degrees
+        case DRIVE_INTER
+            1. follow line until intersection
+        return true;       
+    }
+}
+
+//just hit the intersection
+5.boolean placePanelPlat(side){
+
+    switch(placePlatState){
+        case CENTER_ON_SECT
+            1. move forward ~2in
+        case TURN_ONE
+            if(right){
+              1.turn left
+            }else{
+                2. turn right
+            }
+        case MOVE_PLAT
+            1.follow line towards plat until ultrasonic stop
+        case MOVE_GRIP
+            1.move the four-bar to the plat position
+        case OPEN_GRIP
+            1. open the gripper
+        case BACKUP
+            1. back away finishing the placement
+            return true;
+    }
+}
+//pick up and move back to the start position
+6.boolean pickUpPanelPlat(side){
+    switch(pickPlatState){
+        case DRIVE_FOR
+            1.drive forward
+        case WAIT_AND_CLOSE
+            1.flash the leds
+            2.wait remote input
+            3.close the gripper
+        case BACK_UP
+            1.back away w/ panel
+            2. move four-bar to rest position
+        case TURN_AROUND 
+            1. turn 180
+        case MOVE_TO_SECT
+            1.follow line till intersection
+        case CENTER_ROBOT
+            1. drive ~2in
+        case TURN_ROOF
+            if(right){
+                1.turn right
+            }else{
+                1.turn left
+            }
+        case MOVE_START
+            1. move off intersection to where robot started
+            return true;
+    }
+}
+
+//place panel and setup to cross sides
+7. boolean placePanelRoof(side){
+    switch(placeRoofState){
+        case MOVE_ROOF
+            1.follow line until stop by ultrasonic
+            2.move the four-bar to roof position
+        case DRIVE_ROOF
+            1. drive so that the panel is over the pins
+        case PLACE_PANEL
+            1. lower the gripper
+        case RELEASE
+            1. open gripper
+        case BACKUP
+            1. backup
+        case TURN
+           1. if(right){
+                1.turn right
+            }else{
+                1.turn left
+            }    
+    }
+}
+
+8.boolean driveToOtherSide(side){
+    switch(switchSidesState){
+        case DRIVE_ONE
+            1. drive perpendicular to tape until passed roof
+        case TURN_ONE
+          1.if(right){
+                1.turn left
+            }else{
+                1.turn right
+            }
+        case DRIVE_PAST_ROOF
+            1. drive past roof parallel to tape
+        case TURN_TWO
+             1.if(right){
+                1.turn left
+            }else{
+                1.turn right
+            }
+        case FINAL_DRIVE 
+            1. drive till find intersection
+        case CENTER_ON_LINE
+            1. drive ~2in
+            return true;       
+    }
+}
+
+
+9. repeat on other robot with different start values
