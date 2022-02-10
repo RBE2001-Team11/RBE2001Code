@@ -2,12 +2,14 @@
 #include <wpi-32u4-lib.h>
 #include <MyDrive.h>
 #include <LineSensor.h>
-
+#include <BlueMotor.h>
 Chassis chassis;
 
 MyDrive drive;
 
 LineSensor lSense;
+
+BlueMotor motor;
 
 // START sensor value variables
 float leftSense;
@@ -28,6 +30,7 @@ void setup()
 {
 
   chassis.init();
+  motor.setup();
   // put your setup code here, to run once:
 }
 
@@ -48,25 +51,35 @@ boolean run(boolean side, boolean isFirst)
   return false;
 }
 
+boolean didTheThing = false;
+
 void loop()
 {
-
-  // stop if button hit
-  while (allowRun)
+  if (didTheThing == false)
   {
-    /* if (stop button hit)
-     {
-       running = false setEfforts(0)
-     }*/
-
-    while (/*side = NULL, and isFirst = NULL*/)
+    if (drive.driveInches(5, 50))
     {
-      // TODO
-      // getButtonPress()
-      // side = buttonPressed;
-      // isFirst = buttonPressed;
+      drive.turn(90, 50);
+      didTheThing = true;
     }
-
-    run(side, isFirst);
   }
+
+  // // stop if button hit
+  // while (allowRun)
+  // {
+  //   /* if (stop button hit)
+  //    {
+  //      running = false setEfforts(0)
+  //    }*/
+
+  //   while (/*side = NULL, and isFirst = NULL*/)
+  //   {
+  //     // TODO
+  //     // getButtonPress()
+  //     // side = buttonPressed;
+  //     // isFirst = buttonPressed;
+  //   }
+
+  //   run(side, isFirst);
+  // }
 }

@@ -19,9 +19,8 @@ void loop{
 }
 
 
-run(isRight, isFirst){
+boolean run(isRight, isFirst){
 //starting near the intersection facing the roof
-
     switch(runState){
         case 1
             //return to intersection facing away from roof
@@ -49,7 +48,7 @@ run(isRight, isFirst){
     }
 }
 
-movePanelPickUp(side){
+boolean movePanelPickUp(side){
     switch(pickRoofState){
         case 1
              if(right){
@@ -64,10 +63,9 @@ movePanelPickUp(side){
             drive(distToPickUp);
             return true;    
     }
-
 }
 
-pickUpPanelRoof(side){
+boolean pickUpPanelRoof(side){
 
     switch(pickRoofState){
        case 1
@@ -85,7 +83,7 @@ pickUpPanelRoof(side){
     }
 }
 
-placePanelRoof(side){
+boolean placePanelRoof(side){
     case 1
             lineFollowToTargetDistance(distance);
             moveGripper(placeRoofPosition);
@@ -105,7 +103,7 @@ placePanelRoof(side){
             }
 }
 
-placePanelPlat(side){\
+boolean placePanelPlat(side){
 
     switch(placePlatState){
         case 1
@@ -129,7 +127,7 @@ placePanelPlat(side){\
     }
 }
 
-pickUpPanelPlat(side){
+boolean pickUpPanelPlat(side){
     switch(pickPlatState){
         case 1
             drive(distance);
@@ -159,8 +157,7 @@ pickUpPanelPlat(side){
     }
 }
 
-driveToOtherSide(side){
-
+boolean driveToOtherSide(side){
     switch(switchSidesState){
         case 1
             drive(distancePassRoof);
@@ -182,9 +179,6 @@ driveToOtherSide(side){
             driveTillIntersection()
         case 6
             drive(2);
-            return true;
-
-            
+            return true;       
     }
-
 }

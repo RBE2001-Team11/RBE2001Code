@@ -53,7 +53,7 @@ boolean MyDrive::driveInches(float inches, float speed)
     // degrees for each wheel to move
     // float moveDegrees = (inches / (2 * PI * (WHEEL_DIAMETER / 2))) * 360;
 
-    chassis.driveFor(inches, speed, true);
+    chassis.driveFor(inches * CENTI_CONV, speed, true);
     // move
     //  left.startMoveFor(moveDegrees, speed);
     //  right.moveFor(moveDegrees, speed);
@@ -72,7 +72,7 @@ boolean MyDrive::driveCentimeters(float centi, float speed)
     // degrees for each wheel to move
     // float moveDegrees = (centi / (2 * PI * ((WHEEL_DIAMETER / CENTI_CONV) / 2))) * 360;
 
-    chassis.driveFor(centi / CENTI_CONV, speed, true);
+    chassis.driveFor(centi, speed, true);
     // move
     // left.startMoveFor(moveDegrees, speed);
     //  right.moveFor(moveDegrees, speed);

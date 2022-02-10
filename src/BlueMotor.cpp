@@ -24,6 +24,7 @@ void BlueMotor::setup()
     OCR1C = 0;
 
     attachInterrupt(digitalPinToInterrupt(ENCA), isr, CHANGE);
+  //  attachInterrupt(digitalPinToInterrupt(ENCB), isr, CHANGE);
     reset();
 }
 
