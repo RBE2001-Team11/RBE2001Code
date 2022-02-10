@@ -20,6 +20,10 @@ float curDistCM;
 
 boolean allowRun = true;
 
+// TODO enumerate
+boolean side = false;
+boolean isFirst = false;
+
 void setup()
 {
 
@@ -38,7 +42,7 @@ void updateValues()
   // curDistCM = ultra.getDistanceCM();
 }
 
-boolean run(boolean side)
+boolean run(boolean side, boolean isFirst)
 {
 
   return false;
@@ -47,13 +51,22 @@ boolean run(boolean side)
 void loop()
 {
 
-  while (allowRun == true)
+  // stop if button hit
+  while (allowRun)
   {
-    if (run(true) == true)
-    {
-      allowRun = false;
-    }
-  }
+    /* if (stop button hit)
+     {
+       running = false setEfforts(0)
+     }*/
 
-  drive.followLine(lSense.getDifference());
+    while (/*side = NULL, and isFirst = NULL*/)
+    {
+      // TODO
+      // getButtonPress()
+      // side = buttonPressed;
+      // isFirst = buttonPressed;
+    }
+
+    run(side, isFirst);
+  }
 }
