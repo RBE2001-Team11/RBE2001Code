@@ -240,8 +240,47 @@ boolean MyDrive::alignToLine(int direct, float leftSense, float rightSense)
     turnContinuous(direct, TURN_SPEED_MED);
     return false;
 }
+/**
+ * @brief
+ *
+ * @param side true if right
+ * @return boolean moved to pickup the panel
+ */
+boolean MyDrive::movePanelPickUp(boolean side, float curDist)
+{
+    switch (movePanelState)
+    {
+    case INIT_TURN:
+        if (side == true)
+        {
+            turn(90, TURN_SPEED_MED);
+            movePanelState = GO_ROOF; // TODO test speds
+        }
+        else
+        {
+            turn(-90, TURN_SPEED_MED);
+            movePanelState = GO_ROOF;
+        }
+        break;
+    case GO_ROOF:
+        if (driveTo(DIST_FROM_ROOF, curDist))
+        {
+            movePanelState = MOVE_PANEL;
+        }
+        break;
+    case MOVE_PANEL:
+        if (driveInches(FINAL_ROOF_DRIVE, DRIVE_SPEED_MED))
+        {
+            movePanelState = INIT_TURN;
+            return true;
+        }
+        break;
+    }
 
-boolean MyDrive::movePanelPickUp(boolean side)
+    return false;
+}
+
+boolean MyDrive::crossSide(boolean side)
 {
     return false;
 }

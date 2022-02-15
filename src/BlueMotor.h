@@ -12,6 +12,14 @@ public:
     void reset();
     void setup();
 
+    const int Side25Place = 0;
+    const int Side25Prep = 0;
+    const int Side25Travel = 0;
+
+    const int Side45Place = 0;
+    const int Side45Prep = 0;
+    const int Side45Travel = 0;
+
 private:
     void setEffort(int effort, bool clockwise);
     static void isr();

@@ -3,6 +3,7 @@
 #include <MyDrive.h>
 #include <LineSensor.h>
 #include <BlueMotor.h>
+#include <MyUltraSonic.h>
 
 #include <ButtonHandler.cpp>
 
@@ -15,6 +16,8 @@ LineSensor lSense;
 BlueMotor motor;
 
 ButtonHandler buttons;
+
+MyUltraSonic ultra;
 
 // START sensor value variables
 float leftSense;
@@ -87,6 +90,21 @@ boolean pickUpPanelRoof(RobotSide s)
   return false;
 }
 
+boolean placePlat(RobotSide s)
+{
+  return false;
+}
+
+boolean pickUpPlat(RobotSide s)
+{
+  return false;
+}
+
+boolean placeRoof(RobotSide s)
+{
+  return false;
+}
+
 boolean run()
 {
 
@@ -105,7 +123,7 @@ boolean run()
     }
     break;
   case MOVE_ROOF:
-    if (drive.movePanelPickUp(robotSide))
+    if (drive.movePanelPickUp(robotSide, ultra.getDistanceIN()))
     {
       runState = PICKUP_ROOF;
     }
@@ -117,16 +135,29 @@ boolean run()
     }
     break;
   case PLACE_PLAT:
+    if (placePlat(robotSide))
+    {
+      runState = PICKUP_PLAT;
+    }
 
     break;
   case PICKUP_PLAT:
-    // placePanelRoof(side);
+    if (pickUpPlat(robotSide))
+    {
+      runState = PLACE_ROOF;
+    }
     break;
   case PLACE_ROOF:
-    // end in starting position
-    //  driveToOtherSide(side);
-    break;
+    if (placeRoof(robotSide))
+    {
+      runState = CROSS_SIDE;
+    }
   case CROSS_SIDE:
+    if (drive.crossSide(robotSide))
+    {
+      runState = HOW_PICKUP;
+      return true;
+    }
     break;
   }
 

@@ -69,6 +69,18 @@ private:
     // turn right
     const int DIR_RIGHT = 1;
 
+    const float DIST_FROM_ROOF = 0.0; // TODO
+    const float FINAL_ROOF_DRIVE = 0.0;
+
+    enum MovePanelState
+    {
+        INIT_TURN,
+        GO_ROOF,
+        MOVE_PANEL
+    };
+
+    MovePanelState movePanelState = INIT_TURN;
+
     // end constantsssss+++++++++++++++++++++++++++++++++++++++++++
 
 public:
@@ -87,6 +99,7 @@ public:
     boolean lineFollowToTargetDistance(float leftSense, float rightSense, float error, float curDist, float targetDist);
     boolean alignToLine(int direct, float leftSense, float rightSense);
 
-    boolean movePanelPickUp(boolean side);
+    boolean movePanelPickUp(boolean side, float curDist);
+    boolean crossSide(boolean side);
 };
 #endif
