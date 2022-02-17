@@ -40,36 +40,7 @@ private:
     // max distance that the ultra will care about while scanning for a bag
     const float MAX_DIST = 25.0f;
 
-    // medium drive speed
-    const float DRIVE_SPEED_MED = 180.0f;
-
-    // fast drive speed
-    const float DRIVE_SPEED_FAST = 270.0f;
-
-    // slow drive speed
-    const float DRIVE_SPEED_SLOW = 70.0f;
-
-    // angle for preparing to align to the line with the light sensors
-    const float PREP_ALIGN_ANGLE = 60.0f;
-
-    const float CENTER_ROBOT_DIST = 2.0f;
-
-    // turn speed in degrees per second medium
-    const float TURN_SPEED_MED = 180.0f;
-
-    // turn speed in degrees per second
-    const float TURN_SPEED_FAST = 270.0f;
-
-    // turn speed in degrees per second
-    const float TURN_SPEED_SLOW = 70.0f;
-
-    // turn left
-    const int DIR_LEFT = -1;
-
-    // turn right
-    const int DIR_RIGHT = 1;
-
-    const float DIST_FROM_ROOF = 0.0; // TODO
+        const float DIST_FROM_ROOF = 0.0; // TODO
     const float FINAL_ROOF_DRIVE = 0.0;
 
     enum MovePanelState
@@ -101,5 +72,34 @@ public:
 
     boolean movePanelPickUp(boolean side, float curDist);
     boolean crossSide(boolean side);
+
+    // medium drive speed
+    const float DRIVE_SPEED_MED = 180.0f;
+
+    // fast drive speed
+    const float DRIVE_SPEED_FAST = 270.0f;
+
+    // slow drive speed
+    const float DRIVE_SPEED_SLOW = 70.0f;
+
+    // angle for preparing to align to the line with the light sensors
+    const float PREP_ALIGN_ANGLE = 60.0f;
+
+    const float CENTER_ROBOT_DIST = 2.0f;
+
+    // turn speed in degrees per second medium
+    const float TURN_SPEED_MED = 180.0f;
+
+    // turn speed in degrees per second
+    const float TURN_SPEED_FAST = 270.0f;
+
+    // turn speed in degrees per second
+    const float TURN_SPEED_SLOW = 70.0f;
+
+    // turn left
+    const int DIR_LEFT = -1;
+
+    // turn right
+    const int DIR_RIGHT = 1;
 };
 #endif
