@@ -11,15 +11,27 @@ float JawServo::getPotVADC()
 
 boolean JawServo::openJaw()
 {
-
-    while (getPotVADC() > openVADC)
+    servo.writeMicroseconds(open);
+    if (getPotVADC() <= openVADC)
     {
+        stopServo();
+        return true;
     }
+    return false;
 }
 
 boolean JawServo::closeJaw()
 {
-    while (getPotVADC() < closedVADC)
+    servo.writeMicroseconds(close);
+    if (getPotVADC() >= closedVADC)
     {
+        stopServo();
+        return true;
     }
+    return false;
+}
+
+void JawServo::stopServo()
+{
+    servo.writeMicroseconds(stop);
 }

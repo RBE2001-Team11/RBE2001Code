@@ -6,9 +6,11 @@ class BlueMotor
 {
 public:
     BlueMotor();
+    void resetEncoder();
     void setEffort(int effort);
-    void moveTo(long position);
+    boolean moveTo(long position);
     long getPosition();
+    void holdTo(long position);
     void reset();
     void setup();
 
@@ -23,12 +25,14 @@ public:
 private:
     void setEffort(int effort, bool clockwise);
     static void isr();
+
     const int tolerance = 3;
     const int PWMOutPin = 11;
     const int AIN2 = 4;
     const int AIN1 = 13;
     const int ENCA = 0;
     const int ENCB = 1;
+    const long DEADBAND = 3;
     const float kP = .5f;
 };
 #endif

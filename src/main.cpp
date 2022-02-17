@@ -1,11 +1,12 @@
 #include <Arduino.h>
 #include <wpi-32u4-lib.h>
+#include <RemoteConstants.h>
+#include <IRdecoder.h>
 #include <MyDrive.h>
 #include <LineSensor.h>
 #include <BlueMotor.h>
 #include <MyUltraSonic.h>
-
-#include <ButtonHandler.cpp>
+#include <JawServo.h>
 
 Chassis chassis;
 
@@ -15,9 +16,11 @@ LineSensor lSense;
 
 BlueMotor motor;
 
-ButtonHandler buttons;
+IRDecoder decoder(15);
 
 MyUltraSonic ultra;
+
+JawServo servo;
 
 // START sensor value variables
 float leftSense;
@@ -66,11 +69,25 @@ enum RunState
 
 RunState runState = HOW_PICKUP;
 
+enum PickRoofState
+{
+  WAIT,
+  CLOSE_GRIP,
+  REMOVE_PANEL,
+  BACKUP,
+  TURN_AROUND,
+  DRIVE_INTER
+
+};
+
+PickRoofState pickRoofState = WAIT;
+
 void setup()
 {
 
   chassis.init();
   motor.setup();
+  decoder.init();
   // put your setup code here, to run once:
 }
 
@@ -87,6 +104,32 @@ void updateValues()
 
 boolean pickUpPanelRoof(RobotSide s)
 {
+  switch (pickRoofState)
+  {
+  case WAIT:
+    // flash the led //TODO
+    if (decoder.getKeyCode(2)) // TODO
+    {
+      pickRoofState = CLOSE_GRIP;
+    }
+    break;
+  case CLOSE_GRIP:
+    // closeGripper();
+    break;
+  case REMOVE_PANEL:
+    // 1.move the four-bar
+    break;
+  case BACKUP:
+    // 1. back away from roof
+    break;
+  case TURN_AROUND:
+    // 1.turn 180 degrees
+    break;
+  case DRIVE_INTER:
+    //  1. follow line until intersection
+    return true;
+    break;
+  }
   return false;
 }
 
@@ -166,7 +209,7 @@ boolean run()
 
 void startRobot()
 {
-  switch (buttons.getStartButton())
+  switch (decoder.getKeyCode())
   {
   case 1:
     side = RIGHT;
@@ -198,7 +241,7 @@ void loop()
   // stop if button hit
   while (allowRun == true)
   {
-    if (buttons.getStopButton())
+    if (decoder.getKeyCode(0)) // TODO
     {
       allowRun = false;
       drive.setEffort(0);

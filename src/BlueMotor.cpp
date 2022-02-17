@@ -5,7 +5,16 @@
 int oldValue = 0;
 int newValue;
 int count = 0;
+int errorCount = 0;
 unsigned time = 0;
+
+const char error = 5;
+
+char encoderArray[4][4] = {
+    {0, -1, 1, error},
+    {1, 0, error, -1},
+    {-1, error, 0, 1},
+    {error, 1, -1, 0}};
 
 BlueMotor::BlueMotor()
 {
@@ -18,14 +27,19 @@ void BlueMotor::setup()
     pinMode(AIN1, OUTPUT);
     pinMode(ENCA, INPUT);
     pinMode(ENCB, INPUT);
-    TCCR1A = 0xA8; //0b10101000; //gcl: added OCR1C for adding a third PWM on pin 11
-    TCCR1B = 0x11; //0b00010001;
+    TCCR1A = 0xA8; // 0b10101000; //gcl: added OCR1C for adding a third PWM on pin 11
+    TCCR1B = 0x11; // 0b00010001;
     ICR1 = 400;
     OCR1C = 0;
 
-    attachInterrupt(digitalPinToInterrupt(ENCA), isr, CHANGE);
-  //  attachInterrupt(digitalPinToInterrupt(ENCB), isr, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(2), isr, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(3), isr, CHANGE);
     reset();
+}
+
+void BlueMotor::resetEncoder()
+{
+    count = 0;
 }
 
 long BlueMotor::getPosition()
@@ -40,7 +54,17 @@ void BlueMotor::reset()
 
 void BlueMotor::isr()
 {
-    count++;
+    newValue = (digitalRead(3) << 1) | digitalRead(2);
+    char value = encoderArray[oldValue][newValue];
+    if (value == error)
+    {
+        errorCount++;
+    }
+    else
+    {
+        count -= value;
+    }
+    oldValue = newValue;
 }
 
 void BlueMotor::setEffort(int effort)
@@ -75,9 +99,22 @@ float getRPM()
     return ((newValue - oldValue) / 270) / (time / 1000 / 60);
 }
 
-void BlueMotor::moveTo(long target) //Move to this encoder position within the specified
-{                                   //tolerance in the header file using proportional control
-                                    //then stop
+//
+boolean BlueMotor::moveTo(long target) // Move to this encoder position within the specified
+{                                      // tolerance in the header file using proportional control
+                                       // then stop
 
-    setEffort((target - getPosition()) * kP); //TODO equation
+    setEffort((target - getPosition()) * kP); // TODO equation
+    if ((getPosition() - target) > -DEADBAND && (getPosition() - target) < DEADBAND)
+    {
+        return true;
+    }
+    return false;
+}
+
+void BlueMotor::holdTo(long target) // Move to this encoder position within the specified
+{                                   // tolerance in the header file using proportional control
+                                    // then stop
+
+    setEffort((target - getPosition()) * kP); // TODO equation
 }
