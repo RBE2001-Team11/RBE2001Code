@@ -8,6 +8,7 @@
 #include <MyUltraSonic.h>
 #include <JawServo.h>
 
+// start Object declarations ++++++++++++++++++++++++++++++++++++++++++++++++
 Chassis chassis;
 
 MyDrive drive;
@@ -22,7 +23,11 @@ MyUltraSonic ultra;
 
 JawServo servo;
 
-// START sensor value variables
+// end Object declarations ===================================================================
+
+// START sensor value variables +++++++++++++++++++++++++++++++++++++++++++++
+
+uint16_t keyPress;
 float leftSense;
 float rightSense;
 float error;
@@ -31,12 +36,37 @@ float error;
 float curDistIN;
 float curDistCM;
 
+// end sensor values ===================================================================
+
+// Start function variables +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++==
 boolean allowRun = true;
 
 // TODO enumerate
 boolean side = false;
 boolean isFirst = false;
 
+// end function variables ===================================================================
+
+// START constants +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+const uint16_t PICKUP_BUTTON = remoteUp; // TODO
+const uint16_t STOP_BUTTON = remotePlayPause;
+// TODO
+const uint16_t S_RIGHT_FIRST = remote1;
+const uint16_t S_RIGHT_SECOND = remote2;
+const uint16_t S_LEFT_FIRST = remote3;
+const uint16_t S_LEFT_SECOND = remote4;
+
+// end constants ===================================================================
+
+// START enums +++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+// TODO check sides
+/**
+ * @brief side of the field
+ * Right = 25 degrees
+ * Left = 45 degrees
+ *
+ */
 enum RobotSide
 {
   RIGHT,
@@ -82,52 +112,95 @@ enum PickRoofState
 
 PickRoofState pickRoofState = WAIT;
 
+// end enums ===================================================================
+
+/**
+ * @brief setup code for initilizing stuffs
+ *
+ */
 void setup()
 {
 
   chassis.init();
   motor.setup();
   decoder.init();
-  // put your setup code here, to run once:
 }
 
+/**
+ * @brief updates sensor values to local variables, should be constantly called in the loop() function
+ *
+ */
 void updateValues()
 {
+
+  keyPress = decoder.getKeyCode();
   leftSense = lSense.getLeft();
   rightSense = lSense.getRight();
   error = lSense.getDifference();
 
   // ultrasonic
-  // curDistIN = ultra.getDistanceIN();
-  // curDistCM = ultra.getDistanceCM();
+  curDistIN = ultra.getDistanceIN();
+  curDistCM = ultra.getDistanceCM();
 }
 
+/**
+ * @brief starting with the gripper opon on the panel pick up the panel
+ * and drive to the intersection
+ *
+ * @param RobotSide
+ * @return true if ran throught the state machine
+ */
 boolean pickUpPanelRoof(RobotSide s)
 {
   switch (pickRoofState)
   {
   case WAIT:
     // flash the led //TODO
-    if (decoder.getKeyCode(2)) // TODO
+    if (keyPress == PICKUP_BUTTON) // TODO
     {
       pickRoofState = CLOSE_GRIP;
     }
     break;
   case CLOSE_GRIP:
-    // closeGripper();
+    if (servo.closeJaw())
+    {
+      pickRoofState = REMOVE_PANEL;
+    }
     break;
   case REMOVE_PANEL:
-    // 1.move the four-bar
+    if (s = RIGHT)
+    {
+      if (motor.moveTo(motor.Side25Prep))
+      {
+        pickRoofState = BACKUP;
+      }
+    }
+    else
+    {
+      if (motor.moveTo(motor.Side45Prep))
+      {
+        pickRoofState = BACKUP;
+      }
+    }
     break;
   case BACKUP:
-    // 1. back away from roof
+    if (drive.driveInches(-4, drive.DRIVE_SPEED_MED))
+    {
+      pickRoofState = TURN_AROUND;
+    }
     break;
   case TURN_AROUND:
-    // 1.turn 180 degrees
+    if (drive.turn(180, drive.TURN_SPEED_MED))
+    {
+      pickRoofState = DRIVE_INTER;
+    }
     break;
   case DRIVE_INTER:
-    //  1. follow line until intersection
-    return true;
+    if (drive.driveTillLine(drive.DRIVE_SPEED_MED, leftSense, rightSense))
+    {
+      pickRoofState = WAIT;
+      return true;
+    }
     break;
   }
   return false;
@@ -209,24 +282,24 @@ boolean run()
 
 void startRobot()
 {
-  switch (decoder.getKeyCode())
+  switch (keyPress)
   {
-  case 1:
+  case S_RIGHT_FIRST:
     side = RIGHT;
     robotRun = FIRST_ROBOT;
     allowRun = true;
     break;
-  case 2:
+  case S_RIGHT_SECOND:
     side = RIGHT;
     robotRun = SECOND_ROBOT;
     allowRun = true;
     break;
-  case 3:
+  case S_LEFT_FIRST:
     side = LEFT;
     robotRun = FIRST_ROBOT;
     allowRun = true;
     break;
-  case 4:
+  case S_LEFT_SECOND:
     side = LEFT;
     robotRun = SECOND_ROBOT;
     allowRun = true;
@@ -238,10 +311,12 @@ boolean didTheThing = false;
 
 void loop()
 {
+
+  updateValues();
   // stop if button hit
   while (allowRun == true)
   {
-    if (decoder.getKeyCode(0)) // TODO
+    if (keyPress = STOP_BUTTON) // TODO
     {
       allowRun = false;
       drive.setEffort(0);
