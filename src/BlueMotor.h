@@ -33,6 +33,6 @@ private:
     const int ENCA = 0;
     const int ENCB = 1;
     const long DEADBAND = 3;
-    const float kP = .5f;
+    const float kP = 4.15f;
 };
 #endif

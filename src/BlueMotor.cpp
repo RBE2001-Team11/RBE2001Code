@@ -32,8 +32,8 @@ void BlueMotor::setup()
     ICR1 = 400;
     OCR1C = 0;
 
-    attachInterrupt(digitalPinToInterrupt(2), isr, CHANGE);
-    attachInterrupt(digitalPinToInterrupt(3), isr, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(ENCA), isr, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(ENCB), isr, CHANGE);
     reset();
 }
 
@@ -54,7 +54,8 @@ void BlueMotor::reset()
 
 void BlueMotor::isr()
 {
-    newValue = (digitalRead(3) << 1) | digitalRead(2);
+
+    newValue = (digitalRead(1) << 1) | digitalRead(0);
     char value = encoderArray[oldValue][newValue];
     if (value == error)
     {
@@ -103,8 +104,9 @@ float getRPM()
 boolean BlueMotor::moveTo(long target) // Move to this encoder position within the specified
 {                                      // tolerance in the header file using proportional control
                                        // then stop
+    // Serial.println((target - getPosition()) * 2);
 
-    setEffort((target - getPosition()) * kP); // TODO equation
+    setEffort((getPosition() - target) * kP); // TODO equation
     if ((getPosition() - target) > -DEADBAND && (getPosition() - target) < DEADBAND)
     {
         return true;
@@ -112,9 +114,8 @@ boolean BlueMotor::moveTo(long target) // Move to this encoder position within t
     return false;
 }
 
-void BlueMotor::holdTo(long target) // Move to this encoder position within the specified
-{                                   // tolerance in the header file using proportional control
-                                    // then stop
-
-    setEffort((target - getPosition()) * kP); // TODO equation
+void BlueMotor::holdTo(long target)           // Move to this encoder position within the specified
+{                                             // tolerance in the header file using proportional control
+                                              // then stop
+    setEffort((getPosition() - target) * kP); // TODO equation
 }

@@ -40,7 +40,7 @@ private:
     // max distance that the ultra will care about while scanning for a bag
     const float MAX_DIST = 25.0f;
 
-        const float DIST_FROM_ROOF = 0.0; // TODO
+    const float DIST_FROM_ROOF = 0.0; // TODO
     const float FINAL_ROOF_DRIVE = 0.0;
 
     enum MovePanelState

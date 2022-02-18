@@ -124,6 +124,7 @@ void setup()
   chassis.init();
   motor.setup();
   decoder.init();
+  Serial.begin(9600);
 }
 
 /**
@@ -313,24 +314,27 @@ void loop()
 {
 
   updateValues();
+
+  // motor.moveTo(0);
+
   // stop if button hit
-  while (allowRun == true)
-  {
-    if (keyPress = STOP_BUTTON) // TODO
-    {
-      allowRun = false;
-      drive.setEffort(0);
-      motor.setEffort(0);
-    }
+  // while (allowRun == true)
+  // {
+  //   if (keyPress = STOP_BUTTON) // TODO
+  //   {
+  //     allowRun = false;
+  //     drive.setEffort(0);
+  //     motor.setEffort(0);
+  //   }
 
-    if (run())
-    {
-      allowRun = false;
-    }
-  }
+  //   if (run())
+  //   {
+  //     allowRun = false;
+  //   }
+  // }
 
-  if (allowRun == false)
-  {
-    startRobot();
-  }
+  // if (allowRun == false)
+  // {
+  //   startRobot();
+  // }
 }
