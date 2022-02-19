@@ -129,16 +129,12 @@
             1.move the four-bar to the plat position
         case OPEN_GRIP
             1. open the gripper
-        case BACKUP
-            1. back away finishing the placement
             return true;
     }
 }
 //pick up and move back to the start position
 6.boolean pickUpPanelPlat(side){
     switch(pickPlatState){
-        case DRIVE_FOR
-            1.drive forward
         case WAIT_AND_CLOSE
             1.flash the leds
             2.wait remote input
