@@ -112,6 +112,17 @@ enum PickRoofState
 
 PickRoofState pickRoofState = WAIT;
 
+enum PlacePlatState
+{
+  CENTER,
+  TURN_1,
+  MOVE_PLAT,
+  MOVE_GRIP,
+  OPEN_JAW
+};
+
+PlacePlatState placePlatState = CENTER;
+
 // end enums ===================================================================
 
 /**
@@ -169,7 +180,7 @@ boolean pickUpPanelRoof(RobotSide s)
     }
     break;
   case REMOVE_PANEL:
-    if (s = RIGHT)
+    if (s == RIGHT)
     {
       if (motor.moveTo(motor.Side25Prep))
       {
@@ -209,6 +220,50 @@ boolean pickUpPanelRoof(RobotSide s)
 
 boolean placePlat(RobotSide s)
 {
+  switch (placePlatState)
+  {
+  case CENTER:
+    if (drive.driveInches(drive.CENTER_ROBOT_DIST, drive.DRIVE_SPEED_MED))
+    {
+      placePlatState = TURN_1;
+    }
+    break;
+  case TURN_1:
+    if (s == RIGHT)
+    {
+      if (drive.turn(-90, drive.TURN_SPEED_MED))
+      {
+        placePlatState = MOVE_PLAT;
+      }
+    }
+    else
+    {
+      if (drive.turn(90, drive.TURN_SPEED_MED))
+      {
+        placePlatState = MOVE_PLAT;
+      }
+    }
+    break;
+  case MOVE_PLAT:
+    if (drive.lineFollowToTargetDistance(leftSense, rightSense, error, curDistIN, 2)) // TODO make constant once tested
+    {
+      placePlatState = MOVE_GRIP;
+    }
+    break;
+  case MOVE_GRIP:
+    if (motor.moveTo(motor.platPlace))
+    {
+      placePlatState = OPEN_JAW;
+    }
+    break;
+  case OPEN_JAW:
+    if (servo.openJaw())
+    {
+      placePlatState = CENTER;
+      return true;
+    }
+    break;
+  }
   return false;
 }
 
@@ -308,6 +363,10 @@ void startRobot()
   }
 }
 
+void testLoop()
+{
+}
+
 boolean didTheThing = false;
 
 void loop()
@@ -315,26 +374,25 @@ void loop()
 
   updateValues();
 
-  // motor.moveTo(0);
+  testLoop();
 
-  // stop if button hit
-  // while (allowRun == true)
-  // {
-  //   if (keyPress = STOP_BUTTON) // TODO
-  //   {
-  //     allowRun = false;
-  //     drive.setEffort(0);
-  //     motor.setEffort(0);
-  //   }
+  while (allowRun == true)
+  {
+    if (keyPress == STOP_BUTTON) // TODO
+    {
+      allowRun = false;
+      drive.setEffort(0);
+      motor.setEffort(0);
+    }
 
-  //   if (run())
-  //   {
-  //     allowRun = false;
-  //   }
-  // }
+    if (run())
+    {
+      allowRun = false;
+    }
+  }
 
-  // if (allowRun == false)
-  // {
-  //   startRobot();
-  // }
+  if (allowRun == false)
+  {
+    startRobot();
+  }
 }

@@ -10,6 +10,7 @@ unsigned time = 0;
 
 const char error = 5;
 
+// array for using quad encoding
 char encoderArray[4][4] = {
     {0, -1, 1, error},
     {1, 0, error, -1},
@@ -20,6 +21,10 @@ BlueMotor::BlueMotor()
 {
 }
 
+/**
+ * @brief sets up the encoder. MUST run before using the blue motor
+ *
+ */
 void BlueMotor::setup()
 {
     pinMode(PWMOutPin, OUTPUT);
@@ -34,24 +39,32 @@ void BlueMotor::setup()
 
     attachInterrupt(digitalPinToInterrupt(ENCA), isr, CHANGE);
     attachInterrupt(digitalPinToInterrupt(ENCB), isr, CHANGE);
-    reset();
+    resetEncoder();
 }
 
+/**
+ * @brief resets encoder value to 0
+ *
+ */
 void BlueMotor::resetEncoder()
 {
     count = 0;
 }
 
+/**
+ * @brief gets current encoder valuie
+ *
+ * @return long encoder count
+ */
 long BlueMotor::getPosition()
 {
     return count;
 }
 
-void BlueMotor::reset()
-{
-    count = 0;
-}
-
+/**
+ * @brief Updates the encoder values
+ *
+ */
 void BlueMotor::isr()
 {
 
@@ -68,6 +81,12 @@ void BlueMotor::isr()
     oldValue = newValue;
 }
 
+/**
+ * @briefsets blue motor effort
+ *
+ * @param effort NOTE: not out of 1. values below 100 dont really move the motor. Possible out of 540ish
+ * use negative to go backwards
+ */
 void BlueMotor::setEffort(int effort)
 {
     if (effort < 0)
@@ -80,6 +99,12 @@ void BlueMotor::setEffort(int effort)
     }
 }
 
+/**
+ * @brief Sets blue motor effort
+ *
+ * @param effort NOTE: not out of 1. values below 100 dont really move the motor. Possible out of 540ish
+ * @param clockwise direction of the motor
+ */
 void BlueMotor::setEffort(int effort, bool clockwise)
 {
     if (clockwise)
@@ -95,27 +120,41 @@ void BlueMotor::setEffort(int effort, bool clockwise)
     OCR1C = constrain(effort, 0, 400);
 }
 
+/**
+ * @brief gives current spinning rpm of the motor
+ *
+ * @return float rpm
+ */
 float getRPM()
 {
     return ((newValue - oldValue) / 270) / (time / 1000 / 60);
 }
 
-//
-boolean BlueMotor::moveTo(long target) // Move to this encoder position within the specified
-{                                      // tolerance in the header file using proportional control
-                                       // then stop
-    // Serial.println((target - getPosition()) * 2);
+/**
+ * @brief moves the blue motor to a specific encoder distance then stops running the motor
+ *
+ * @param target idk rly know yet. maybe 360 for full rotation //TODO
+ * @return true if reached with a deadband of the target
+ */
+boolean BlueMotor::moveTo(long target)
+{
 
-    setEffort((getPosition() - target) * kP); // TODO equation
+    setEffort((getPosition() - target) * kP);
     if ((getPosition() - target) > -DEADBAND && (getPosition() - target) < DEADBAND)
     {
+        setEffort(0);
         return true;
     }
     return false;
 }
 
-void BlueMotor::holdTo(long target)           // Move to this encoder position within the specified
-{                                             // tolerance in the header file using proportional control
-                                              // then stop
-    setEffort((getPosition() - target) * kP); // TODO equation
+/**
+ * @brief moves the motor to a specific encoder distance and continues supplying voltage to hold it there
+ *
+ * @param target maybe 360 for one rotation //TODO
+ */
+void BlueMotor::holdTo(long target)
+{
+
+    setEffort((getPosition() - target) * kP);
 }
