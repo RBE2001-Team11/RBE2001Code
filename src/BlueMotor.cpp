@@ -99,10 +99,27 @@ void BlueMotor::setEffort(int effort)
     }
 }
 
+void BlueMotor::setEffortNoD(int effort)
+{
+    if (effort < 0)
+    {
+        effort = -effort;
+        digitalWrite(AIN1, HIGH);
+        digitalWrite(AIN2, LOW);
+    }
+    else
+    {
+        digitalWrite(AIN1, LOW);
+        digitalWrite(AIN2, HIGH);
+    }
+    effort = ((effort / 400) * (400 - DEAD_ZONE)) + DEAD_ZONE;
+    OCR1C = constrain(effort, 0, 400);
+}
+
 /**
  * @brief Sets blue motor effort
  *
- * @param effort NOTE: not out of 1. values below 100 dont really move the motor. Possible out of 540ish
+ * @param effort NOTE: not out of 1. values below 100 dont really move the motor.
  * @param clockwise direction of the motor
  */
 void BlueMotor::setEffort(int effort, bool clockwise)
@@ -117,6 +134,7 @@ void BlueMotor::setEffort(int effort, bool clockwise)
         digitalWrite(AIN1, LOW);
         digitalWrite(AIN2, HIGH);
     }
+
     OCR1C = constrain(effort, 0, 400);
 }
 

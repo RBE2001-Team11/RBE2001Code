@@ -365,6 +365,7 @@ void startRobot()
 
 void testLoop()
 {
+  motor.moveTo(-500);
 }
 
 boolean didTheThing = false;
@@ -374,25 +375,25 @@ void loop()
 
   updateValues();
 
-  testLoop();
+  motor.setEffort(150, false);
 
-  while (allowRun == true)
-  {
-    if (keyPress == STOP_BUTTON) // TODO
-    {
-      allowRun = false;
-      drive.setEffort(0);
-      motor.setEffort(0);
-    }
+  // while (allowRun == true)
+  // {
+  //   if (keyPress == STOP_BUTTON) // TODO
+  //   {
+  //     allowRun = false;
+  //     drive.setEffort(0);
+  //     motor.setEffort(0);
+  //   }
 
-    if (run())
-    {
-      allowRun = false;
-    }
-  }
+  //   if (run())
+  //   {
+  //     allowRun = false;
+  //   }
+  // }
 
-  if (allowRun == false)
-  {
-    startRobot();
-  }
+  // if (allowRun == false)
+  // {
+  //  // startRobot();
+  // }
 }

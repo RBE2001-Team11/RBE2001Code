@@ -9,10 +9,18 @@ float JawServo::getPotVADC()
     return analogRead(linearPotPin);
 }
 
+boolean JawServo::getMoving()
+{
+    if (prevVADC < getPotVADC() + TOLERANCE || prevVADC > getPotVADC() - TOLERANCE)
+    {
+        return true;
+    }
+}
+
 boolean JawServo::openJaw()
 {
     servo.writeMicroseconds(open);
-    if (getPotVADC() <= openVADC)
+    if (getPotVADC() <= openVADC || getMoving())
     {
         stopServo();
         return true;
@@ -23,7 +31,7 @@ boolean JawServo::openJaw()
 boolean JawServo::closeJaw()
 {
     servo.writeMicroseconds(close);
-    if (getPotVADC() >= closedVADC)
+    if (getPotVADC() >= closedVADC || getMoving())
     {
         stopServo();
         return true;
