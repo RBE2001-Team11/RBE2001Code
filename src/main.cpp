@@ -69,8 +69,8 @@ const uint16_t S_LEFT_SECOND = remote4;
  */
 enum RobotSide
 {
-  RIGHT,
   LEFT,
+  RIGHT,
   BRUH_WHY_CANT_I_SET_ENUM_TO_NULL_THE_FIRST
 };
 
@@ -122,6 +122,20 @@ enum PlacePlatState
 };
 
 PlacePlatState placePlatState = CENTER;
+
+enum PickPlatState
+{
+  WAIT_AND_CLOSE_PP,
+  CLOSE_GRIP_PP,
+  BACK_UP_PP,
+  TURN_AROUND_PP,
+  MOVE_TO_SECT_PP,
+  CENTER_ROBOT_PP,
+  TURN_ROOF_PP,
+  MOVE_START_PP,
+  FINISH_GRIP_MOVE_PP
+};
+PickPlatState pickPlatState = WAIT_AND_CLOSE_PP;
 
 // end enums ===================================================================
 
@@ -269,11 +283,104 @@ boolean placePlat(RobotSide s)
 
 boolean pickUpPlat(RobotSide s)
 {
+  switch (pickPlatState)
+  {
+  case WAIT_AND_CLOSE_PP:
+    // TODO LED
+    if (keyPress == PICKUP_BUTTON) // TODO
+    {
+      pickPlatState = CLOSE_GRIP_PP;
+    }
+    break;
+  case CLOSE_GRIP_PP:
+    if (servo.closeJaw())
+    {
+      pickPlatState = BACK_UP_PP;
+    }
+    break;
+  case BACK_UP_PP:
+    if (drive.driveInches(-4, drive.DRIVE_SPEED_MED))
+    {
+      pickPlatState = TURN_AROUND_PP;
+    }
+    break;
+  case TURN_AROUND_PP:
+    if (drive.turn(180, drive.TURN_SPEED_MED))
+    {
+      pickPlatState = MOVE_TO_SECT_PP;
+    }
+    break;
+
+  case MOVE_TO_SECT_PP:
+    if (drive.lineFollowTillLine(leftSense, rightSense, error))
+    {
+      pickPlatState = CENTER_ROBOT_PP;
+    }
+    break;
+  case CENTER_ROBOT_PP:
+    if (drive.driveInches(2, drive.DRIVE_SPEED_MED))
+    {
+      pickPlatState = TURN_ROOF_PP;
+    }
+
+    break;
+  case TURN_ROOF_PP:
+    if (s == RIGHT)
+    {
+      if (drive.turn(90, drive.TURN_SPEED_MED))
+      {
+        placePlatState = MOVE_PLAT;
+      }
+    }
+    else
+    {
+      if (drive.turn(-90, drive.TURN_SPEED_MED))
+      {
+        placePlatState = MOVE_PLAT;
+      }
+    }
+    break;
+  case MOVE_START_PP:
+    if (s == RIGHT)
+    {
+      motor.holdTo(motor.Side45Prep);
+    }
+    else
+    {
+      motor.holdTo(motor.Side25Prep);
+    }
+    if (drive.lineFollowToTargetDistance(leftSense, rightSense, error, curDistIN, 3))
+    // TODO distance
+    {
+      pickPlatState = FINISH_GRIP_MOVE_PP;
+    }
+    break;
+  case FINISH_GRIP_MOVE_PP:
+
+    if (s == RIGHT)
+    {
+      if (motor.moveTo(motor.Side45Prep))
+      {
+        pickPlatState = WAIT_AND_CLOSE_PP;
+        return true;
+      }
+    }
+    else
+    {
+      if (motor.moveTo(motor.Side25Prep))
+      {
+        pickPlatState = WAIT_AND_CLOSE_PP;
+        return true;
+      }
+    }
+    break;
+  }
   return false;
 }
 
 boolean placeRoof(RobotSide s)
 {
+
   return false;
 }
 
