@@ -8,6 +8,8 @@ public:
     BlueMotor();
     void resetEncoder();
     void setEffort(int effort);
+
+    void setEffortNoD(int effort);
     boolean moveTo(long position);
     long getPosition();
     void holdTo(long position);
@@ -23,8 +25,9 @@ public:
 
     const int platPlace = 0;
 
-private:
     void setEffort(int effort, bool clockwise);
+
+public:
     static void isr();
 
     const int tolerance = 3;
@@ -34,6 +37,7 @@ private:
     const int ENCA = 0;
     const int ENCB = 1;
     const long DEADBAND = 3;
+    const int DEAD_ZONE = 100; // TODO
     const float kP = 4.15f;
 };
 #endif
