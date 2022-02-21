@@ -11,7 +11,6 @@ public:
     boolean moveTo(long position);
     long getPosition();
     void holdTo(long position);
-    void reset();
     void setup();
 
     const int Side25Place = 0;
@@ -21,6 +20,8 @@ public:
     const int Side45Place = 0;
     const int Side45Prep = 0;
     const int Side45Travel = 0;
+
+    const int platPlace = 0;
 
 private:
     void setEffort(int effort, bool clockwise);
@@ -33,6 +34,6 @@ private:
     const int ENCA = 0;
     const int ENCB = 1;
     const long DEADBAND = 3;
-    const float kP = .5f;
+    const float kP = 4.15f;
 };
 #endif
