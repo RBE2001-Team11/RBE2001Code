@@ -11,10 +11,11 @@ float JawServo::getPotVADC()
 
 boolean JawServo::getMoving()
 {
-    if (prevVADC < getPotVADC() + TOLERANCE || prevVADC > getPotVADC() - TOLERANCE)
+    if (((getPotVADC() - prevVADC) > 0 && (getPotVADC() - prevVADC) > TOLERANCE) || ((getPotVADC() - prevVADC) < 0 && (getPotVADC() - prevVADC) < -TOLERANCE))
     {
         return true;
     }
+    return false;
 }
 
 boolean JawServo::openJaw()

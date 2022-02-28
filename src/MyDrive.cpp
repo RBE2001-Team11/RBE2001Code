@@ -246,7 +246,7 @@ boolean MyDrive::alignToLine(int direct, float leftSense, float rightSense)
  * @param side true if right
  * @return boolean moved to pickup the panel
  */
-boolean MyDrive::movePanelPickUp(boolean side, float curDist)
+boolean MyDrive::movePanelPickUp(boolean side, float curDist, float leftSense, float rightSense, float error)
 {
     switch (movePanelState)
     {
@@ -263,7 +263,7 @@ boolean MyDrive::movePanelPickUp(boolean side, float curDist)
         }
         break;
     case GO_ROOF:
-        if (driveTo(DIST_FROM_ROOF, curDist))
+        if (lineFollowToTargetDistance(leftSense, rightSense, error, curDist, DIST_FROM_ROOF))
         {
             movePanelState = MOVE_PANEL;
         }
@@ -280,7 +280,74 @@ boolean MyDrive::movePanelPickUp(boolean side, float curDist)
     return false;
 }
 
-boolean MyDrive::crossSide(boolean side)
+boolean MyDrive::crossSide(boolean side, float leftSense, float rightSense, float error)
 {
+
+    switch (crossSideState)
+    {
+    case DRIVE_ONE:
+        if (driveInches(8, DRIVE_SPEED_MED))
+        {
+            crossSideState = TURN_ONE;
+        }
+        break;
+    case TURN_ONE:
+        if (side == true)
+        {
+            if (turn(-90, TURN_SPEED_MED))
+            {
+                crossSideState = DRIVE_TAPE;
+            }
+        }
+        else
+        {
+            if (turn(90, TURN_SPEED_MED))
+            {
+                crossSideState = DRIVE_TAPE;
+            }
+        }
+        break;
+    case DRIVE_TAPE:
+        if (driveTillLine(DRIVE_SPEED_MED, leftSense, rightSense))
+        {
+            crossSideState = CENTER;
+        }
+        break;
+    case CENTER:
+        if (driveInches(2, DRIVE_SPEED_MED))
+        {
+            crossSideState = TURN_TWOP;
+        }
+        break;
+    case TURN_TWOP:
+        if (side == true)
+        {
+            if (turn(-90, TURN_SPEED_MED))
+            {
+                crossSideState = DRIVE_SECT;
+            }
+        }
+        else
+        {
+            if (turn(90, TURN_SPEED_MED))
+            {
+                crossSideState = DRIVE_SECT;
+            }
+        }
+        break;
+    case DRIVE_SECT:
+        if (lineFollowTillLine(leftSense, rightSense, error))
+        {
+            crossSideState = CENTER_DOS;
+        }
+        break;
+    case CENTER_DOS:
+        if (driveInches(2, DRIVE_SPEED_MED))
+        {
+            crossSideState = DRIVE_ONE;
+        }
+        return true;
+        break;
+    }
     return false;
 }

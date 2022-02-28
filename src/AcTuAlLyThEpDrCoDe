@@ -183,7 +183,7 @@
     }
 }
 
-8.boolean driveToOtherSide(side){
+8.boolean crossSide(side){
     switch(switchSidesState){
         case DRIVE_ONE
             1. drive perpendicular to tape until passed roof
@@ -205,6 +205,15 @@
             1. drive till find intersection
         case CENTER_ON_LINE
             1. drive ~2in
+        case TURN_TREE
+             1.if(right){
+                1.turn left
+            }else{
+                1.turn right
+            }
+        case FOLLOW_LINE
+            1. follow line
+            2. stop when button pushed on the remote
             return true;       
     }
 }
