@@ -137,6 +137,17 @@ enum PickPlatState
 };
 PickPlatState pickPlatState = WAIT_AND_CLOSE_PP;
 
+enum PlaceRoofState
+{
+  PREP_PANEL_PR,
+  PLACE_PANEL_PR,
+  RELEASE_PR,
+  BACKUP_PR,
+  TURN_PR
+};
+
+PlaceRoofState placeRoofState = PREP_PANEL_PR;
+
 // end enums ===================================================================
 
 /**
@@ -381,6 +392,72 @@ boolean pickUpPlat(RobotSide s)
 boolean placeRoof(RobotSide s)
 {
 
+  switch (placeRoofState)
+  {
+  case PREP_PANEL_PR:
+    if (s == RIGHT)
+    {
+      if (motor.moveTo(motor.Side25Prep))
+      {
+        placeRoofState = PLACE_PANEL_PR;
+      }
+    }
+    else
+    {
+      if (motor.moveTo(motor.Side45Prep))
+      {
+        placeRoofState = PLACE_PANEL_PR;
+      }
+    }
+    break;
+  case PLACE_PANEL_PR:
+    if (s == RIGHT)
+    {
+      if (motor.moveTo(motor.Side25Place))
+      {
+        placeRoofState = RELEASE_PR;
+      }
+    }
+    else
+    {
+      if (motor.moveTo(motor.Side45Place))
+      {
+        placeRoofState = RELEASE_PR;
+      }
+    }
+    break;
+  case RELEASE_PR:
+    if (servo.openJaw())
+    {
+      placeRoofState = RELEASE_PR;
+    }
+    break;
+  case BACKUP_PR:
+
+    if (drive.driveInches(-4, drive.DRIVE_SPEED_MED))
+
+    {
+      placeRoofState = TURN_PR;
+    }
+    break;
+  case TURN_PR:
+    if (s == RIGHT)
+    {
+      if (drive.turn(90, drive.TURN_SPEED_MED))
+      {
+        placeRoofState = PREP_PANEL_PR;
+      }
+    }
+    else
+    {
+      if (drive.turn(-90, drive.TURN_SPEED_MED))
+      {
+        placeRoofState = PREP_PANEL_PR;
+      }
+    }
+    return true;
+    break;
+  }
   return false;
 }
 
@@ -402,7 +479,7 @@ boolean run()
     }
     break;
   case MOVE_ROOF:
-    if (drive.movePanelPickUp(robotSide, ultra.getDistanceIN()))
+    if (drive.movePanelPickUp(robotSide, ultra.getDistanceIN(), leftSense, rightSense, error))
     {
       runState = PICKUP_ROOF;
     }
@@ -432,7 +509,7 @@ boolean run()
       runState = CROSS_SIDE;
     }
   case CROSS_SIDE:
-    if (drive.crossSide(robotSide))
+    if (drive.crossSide(robotSide, leftSense, rightSense, error))
     {
       runState = HOW_PICKUP;
       return true;
@@ -482,25 +559,23 @@ void loop()
 
   updateValues();
 
-  motor.setEffort(150, false);
+  while (allowRun == true)
+  {
+    if (keyPress == STOP_BUTTON) // TODO
+    {
+      allowRun = false;
+      drive.setEffort(0);
+      motor.setEffort(0);
+    }
 
-  // while (allowRun == true)
-  // {
-  //   if (keyPress == STOP_BUTTON) // TODO
-  //   {
-  //     allowRun = false;
-  //     drive.setEffort(0);
-  //     motor.setEffort(0);
-  //   }
+    if (run())
+    {
+      allowRun = false;
+    }
+  }
 
-  //   if (run())
-  //   {
-  //     allowRun = false;
-  //   }
-  // }
-
-  // if (allowRun == false)
-  // {
-  //  // startRobot();
-  // }
+  if (allowRun == false)
+  {
+    startRobot();
+  }
 }

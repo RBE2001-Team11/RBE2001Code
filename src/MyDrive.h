@@ -52,6 +52,18 @@ private:
 
     MovePanelState movePanelState = INIT_TURN;
 
+    enum CrossSideState
+    {
+        DRIVE_ONE,
+        TURN_ONE,
+        DRIVE_TAPE,
+        CENTER,
+        TURN_TWOP,
+        DRIVE_SECT,
+        CENTER_DOS
+    };
+    CrossSideState crossSideState = DRIVE_ONE;
+
     // end constantsssss+++++++++++++++++++++++++++++++++++++++++++
 
 public:
@@ -70,8 +82,8 @@ public:
     boolean lineFollowToTargetDistance(float leftSense, float rightSense, float error, float curDist, float targetDist);
     boolean alignToLine(int direct, float leftSense, float rightSense);
 
-    boolean movePanelPickUp(boolean side, float curDist);
-    boolean crossSide(boolean side);
+    boolean movePanelPickUp(boolean side, float curDist, float leftSense, float rightSense, float error);
+    boolean crossSide(boolean side, float leftSense, float rightSense, float error);
 
     // medium drive speed
     const float DRIVE_SPEED_MED = 180.0f;
