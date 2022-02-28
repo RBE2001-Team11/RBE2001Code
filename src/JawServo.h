@@ -6,26 +6,28 @@ class JawServo
 {
 private:
     Servo32U4 servo;
-    // TODO get all of these
-    const int linearPotPin = 6; // TODO
-    const int stop = 1490;
-    const int close = 1700; // TODO
-    const int open = 1300;  // TODO
-    const int delay = 540;  // ms
-    const int openVADC = 600;
-    const int closedVADC = 940;
+    const int linearPotPin = A11;
+    const int stopOpen = 1600;
+    const int stopClose = 1100;
+    const int close = 1800;
+    const int open = 1000;
+    // const int delay = 540;  // ms
+    const int openVADC = 220;
+    const int closedVADC = 280;
 
-    const int prevVADC = 0;
-    const int TOLERANCE = 50;
+    int prevVADC = 0;
+    const int TOLERANCE = 10;
 
 public:
     JawServo();
 
     float getPotVADC();
 
+    void openNoPot();
+    void closeNoPot();
     boolean openJaw();
     boolean closeJaw();
     boolean getMoving();
-    void stopServo();
+    void stopServoOpen();
+    void stopServoClose();
 };
-// set timer
