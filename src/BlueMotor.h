@@ -19,8 +19,8 @@ public:
     const int Side25Prep = -9000;
     const int Side25Travel = 0;
 
-    const int Side45Place = 0;
-    const int Side45Prep = 0;
+    const int Side45Place = -4700;
+    const int Side45Prep = -6000;
     const int Side45Travel = 0;
 
     const int platPlace = 0;

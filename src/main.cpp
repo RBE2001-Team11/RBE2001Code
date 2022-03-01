@@ -24,6 +24,8 @@ MyUltraSonic ultra;
 
 JawServo servo;
 
+Romi32U4ButtonB buttonB;
+
 // end Object declarations ===================================================================
 
 // START sensor value variables +++++++++++++++++++++++++++++++++++++++++++++
@@ -40,7 +42,7 @@ float curDistCM;
 // end sensor values ===================================================================
 
 // Start function variables +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++==
-boolean allowRun = true;
+boolean allowRun =false;
 
 // TODO enumerate
 boolean side = false;
@@ -161,8 +163,8 @@ void setup()
   chassis.init();
   motor.setup();
   decoder.init();
-  // ultra.initI();
-  // Serial.begin(9600);
+  ultra.initI();
+  Serial.begin(9600);
 }
 
 /**
@@ -205,22 +207,22 @@ boolean pickUpPanelRoof(RobotSide s)
     if (servo.closeJaw())
     {
       pickRoofState = REMOVE_PANEL;
-      motor.setCount(motor.Side25Place);
+      if(s == RIGHT){
+        motor.setCount(motor.Side25Place);
+      } else {
+        motor.setCount(motor.Side45Place);
+      }
+      
     }
     break;
   case REMOVE_PANEL:
-    if (s == RIGHT)
-    {
+    if (s == RIGHT) {
       // motor.setCount(motor.Side25Place);
-      if (motor.moveTo(motor.Side25Prep))
-      {
+      if (motor.moveTo(motor.Side25Prep)) {
         pickRoofState = BACKUP;
       }
-    }
-    else
-    {
-      if (motor.moveTo(motor.Side45Prep))
-      {
+    } else {
+      if (motor.moveTo(motor.Side45Prep)) {
         pickRoofState = BACKUP;
       }
     }
@@ -261,21 +263,25 @@ boolean placePlat(RobotSide s)
   case TURN_1:
     if (s == RIGHT)
     {
-      if (drive.turn(-90, drive.TURN_SPEED_MED))
+      if (drive.alignToLine(-1, leftSense,rightSense))
       {
         placePlatState = MOVE_PLAT;
       }
     }
     else
     {
-      if (drive.turn(90, drive.TURN_SPEED_MED))
-      {
+      if(drive.alignToLine(1, leftSense,rightSense)){
         placePlatState = MOVE_PLAT;
       }
+      // if (drive.turn(-90, drive.TURN_SPEED_MED))
+      // {
+      //   placePlatState = MOVE_PLAT;
+      // }
     }
     break;
   case MOVE_PLAT:
-    if (drive.lineFollowToTargetDistance(leftSense, rightSense, error, curDistIN, 2)) // TODO make constant once tested
+  //Serial.println("moving plat");
+    if (drive.lineFollowToTargetDistance(leftSense, rightSense, error, curDistIN, 9)) // TODO make constant once tested
     {
       placePlatState = MOVE_GRIP;
     }
@@ -560,14 +566,12 @@ void testLoop()
 
 boolean didTheThing = false;
 
-Romi32U4ButtonA buttonA;
-Romi32U4ButtonB buttonB;
-Romi32U4ButtonC buttonC;
+boolean startYes = false;
 
 void loop()
 {
   updateValues();
-
+ // Serial.println(curDistCM);
   // drive.movePanelPickUp(1, curDistIN, leftSense, rightSense, error);
   // Serial.println(decoder.getCode());
   // delay(100);
@@ -595,36 +599,46 @@ void loop()
   // Serial.println(motor.getPosition());
   //  pickUpPanelRoof(RIGHT);
 
+
   robotRun = FIRST_ROBOT;
-  side = RIGHT;
+  side = LEFT;
 
-  // if (didTheThing == true)
-  // {
-  //   placePlat(RIGHT);
-  // }
-  // // run();
-  // if (didTheThing == false && pickUpPanelRoof(RIGHT))
-  // {
-  //   didTheThing = true;
-  // }
+  if(buttonB.isPressed()){
+    startYes = true;
+  }
 
-  // while (allowRun == true)
-  // {
-  //   if (keyPress == STOP_BUTTON) // TODO
-  //   {
-  //     allowRun = false;
-  //     drive.setEffort(0);
-  //     motor.setEffort(0);
-  //   }
+  if(startYes){
+    if (didTheThing == false && pickUpPanelRoof(LEFT)){
+      didTheThing = true;
+    }
 
-  //   if (run())
-  //   {
-  //     allowRun = false;
-  //   }
-  // }
+    if (didTheThing == true) {
+      placePlat(RIGHT);
+      allowRun = false;
+    }
+  }
+
+  // run();
+  
+
+  while (allowRun == true)
+  {
+    if (keyPress == STOP_BUTTON) // TODO
+    {
+      allowRun = false;
+      drive.setEffort(0);
+      motor.setEffort(0);
+    }
+
+    if (run())
+    {
+      allowRun = false;
+    }
+  }
 
   // if (allowRun == false)
   // {
   //   startRobot();
   // }
+  
 }

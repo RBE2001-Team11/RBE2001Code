@@ -197,6 +197,7 @@ boolean MyDrive::lineFollowToTargetDistance(float leftSense, float rightSense, f
     // if not in target distance
     if (curDist <= targetDist)
     {
+        setEffort(0);
         return true;
     }
     followLine(error);

@@ -1,6 +1,6 @@
 #include <MyUltraSonic.h>
 
-Rangefinder rangefinder(17, 3);
+Rangefinder rangefinder(17, 12);
 
 MyUltraSonic::MyUltraSonic()
 {

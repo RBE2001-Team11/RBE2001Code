@@ -6,7 +6,7 @@ class JawServo
 {
 private:
     Servo32U4 servo;
-    const int linearPotPin = A11;
+    const int linearPotPin = A0;
     const int stopOpen = 1600;
     const int stopClose = 1100;
     const int close = 1800;
@@ -16,7 +16,7 @@ private:
     const int closedVADC = 280;
 
     int prevVADC = 0;
-    const int TOLERANCE = 10;
+    const int TOLERANCE = 1;
 
 public:
     JawServo();
