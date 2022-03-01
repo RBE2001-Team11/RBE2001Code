@@ -137,8 +137,8 @@ boolean MyDrive::driveTo(float targetDist, float curDist)
 void MyDrive::followLine(float error)
 {
 
-    float leftEffort = LINE_BASE_SPEED + (error * LINE_PROP);
-    float rightEffort = LINE_BASE_SPEED - (error * LINE_PROP);
+    float leftEffort = LINE_BASE_SPEED - (error * LINE_PROP);
+    float rightEffort = LINE_BASE_SPEED + (error * LINE_PROP);
 
     chassis.setMotorEfforts(leftEffort, rightEffort);
     // left.setEffort(LINE_BASE_SPEED + (error * LINE_PROP));

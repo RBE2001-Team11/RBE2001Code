@@ -51,6 +51,11 @@ void BlueMotor::resetEncoder()
     count = 0;
 }
 
+void BlueMotor::setCount(float countNew)
+{
+    count = countNew;
+}
+
 /**
  * @brief gets current encoder valuie
  *
@@ -157,7 +162,15 @@ float getRPM()
 boolean BlueMotor::moveTo(long target)
 {
 
-    setEffort((getPosition() - target) * kP);
+    Serial.println(getPosition());
+    if (target < 0)
+    {
+        setEffortNoD((getPosition() - target) * kP);
+    }
+    else
+    {
+        setEffortNoD((getPosition() - target) * kPDown);
+    }
     if ((getPosition() - target) > -DEADBAND && (getPosition() - target) < DEADBAND)
     {
         setEffort(0);

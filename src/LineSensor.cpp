@@ -5,8 +5,8 @@ LineSensor::LineSensor()
 }
 
 /**
-     * returns the left sensor voltage, less is more light
-     */
+ * returns the left sensor voltage, less is more light
+ */
 float LineSensor::getLeft()
 {
     return analogRead(leftPort);
@@ -14,17 +14,17 @@ float LineSensor::getLeft()
 }
 
 /**
-     * returns the right sensor voltage, less is more light
-     */
+ * returns the right sensor voltage, less is more light
+ */
 float LineSensor::getRight()
 {
     return analogRead(rightPort);
-    //return rightSensor.readVoltage();
+    // return rightSensor.readVoltage();
 }
 
 /**
-     * returns the differance between the right and left sensors
-     */
+ * returns the differance between the right and left sensors
+ */
 float LineSensor::getDifference()
 {
     return getRight() - getLeft();

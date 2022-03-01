@@ -21,5 +21,7 @@ public:
      * returns the distance in inches
      */
     float getDistanceIN();
+
+    void initI();
 };
 #endif
