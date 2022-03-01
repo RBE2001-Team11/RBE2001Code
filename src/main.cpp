@@ -7,6 +7,7 @@
 #include <BlueMotor.h>
 #include <MyUltraSonic.h>
 #include <JawServo.h>
+#include <Rangefinder.h>
 
 // start Object declarations ++++++++++++++++++++++++++++++++++++++++++++++++
 Chassis chassis;
@@ -17,7 +18,7 @@ LineSensor lSense;
 
 BlueMotor motor;
 
-IRDecoder decoder(15);
+IRDecoder decoder(14);
 
 MyUltraSonic ultra;
 
@@ -160,7 +161,8 @@ void setup()
   chassis.init();
   motor.setup();
   decoder.init();
-  Serial.begin(9600);
+  // ultra.initI();
+  // Serial.begin(9600);
 }
 
 /**
@@ -193,6 +195,7 @@ boolean pickUpPanelRoof(RobotSide s)
   {
   case WAIT:
     // flash the led //TODO
+    pickRoofState = CLOSE_GRIP;    // TODO
     if (keyPress == PICKUP_BUTTON) // TODO
     {
       pickRoofState = CLOSE_GRIP;
@@ -202,11 +205,13 @@ boolean pickUpPanelRoof(RobotSide s)
     if (servo.closeJaw())
     {
       pickRoofState = REMOVE_PANEL;
+      motor.setCount(motor.Side25Place);
     }
     break;
   case REMOVE_PANEL:
     if (s == RIGHT)
     {
+      // motor.setCount(motor.Side25Place);
       if (motor.moveTo(motor.Side25Prep))
       {
         pickRoofState = BACKUP;
@@ -221,19 +226,19 @@ boolean pickUpPanelRoof(RobotSide s)
     }
     break;
   case BACKUP:
-    if (drive.driveInches(-4, drive.DRIVE_SPEED_MED))
+    if (drive.driveInches(-3.5, 5))
     {
       pickRoofState = TURN_AROUND;
     }
     break;
   case TURN_AROUND:
-    if (drive.turn(180, drive.TURN_SPEED_MED))
+    if (drive.turn(180, drive.TURN_SPEED_SLOW))
     {
       pickRoofState = DRIVE_INTER;
     }
     break;
   case DRIVE_INTER:
-    if (drive.driveTillLine(drive.DRIVE_SPEED_MED, leftSense, rightSense))
+    if (drive.lineFollowTillLine(leftSense, rightSense, error))
     {
       pickRoofState = WAIT;
       return true;
@@ -329,7 +334,7 @@ boolean pickUpPlat(RobotSide s)
     }
     break;
   case CENTER_ROBOT_PP:
-    if (drive.driveInches(2, drive.DRIVE_SPEED_MED))
+    if (drive.driveInches(drive.CENTER_ROBOT_DIST, drive.DRIVE_SPEED_MED))
     {
       pickPlatState = TURN_ROOF_PP;
     }
@@ -469,14 +474,15 @@ boolean run()
   {
   case HOW_PICKUP:
     // return to intersection facing away from roof
-    if (robotRun == FIRST_ROBOT)
-    {
-      runState = PICKUP_ROOF;
-    }
-    else
-    {
-      runState = MOVE_ROOF;
-    }
+    runState = PICKUP_ROOF;
+    // if (robotRun == FIRST_ROBOT)
+    // {
+    //   runState = PICKUP_ROOF;
+    // }
+    // else
+    // {
+    //   runState = MOVE_ROOF;
+    // }
     break;
   case MOVE_ROOF:
     if (drive.movePanelPickUp(robotSide, ultra.getDistanceIN(), leftSense, rightSense, error))
@@ -554,28 +560,71 @@ void testLoop()
 
 boolean didTheThing = false;
 
+Romi32U4ButtonA buttonA;
+Romi32U4ButtonB buttonB;
+Romi32U4ButtonC buttonC;
+
 void loop()
 {
-
   updateValues();
 
-  while (allowRun == true)
-  {
-    if (keyPress == STOP_BUTTON) // TODO
-    {
-      allowRun = false;
-      drive.setEffort(0);
-      motor.setEffort(0);
-    }
+  // drive.movePanelPickUp(1, curDistIN, leftSense, rightSense, error);
+  // Serial.println(decoder.getCode());
+  // delay(100);
+  // 4261527296 play/pause
+  // 4194680576 button below
+  // 4127833856
 
-    if (run())
-    {
-      allowRun = false;
-    }
-  }
+  // if (buttonA.isPressed())
+  // {
+  //   Serial.println("down");
+  //   motor.setEffort(-200);
+  // }
+  // if (buttonB.isPressed())
+  // {
+  //   Serial.println("up");
+  //   motor.setEffort(200);
+  // }
 
-  if (allowRun == false)
-  {
-    startRobot();
-  }
+  // if (buttonC.isPressed())
+  // {
+  //   Serial.println("stop");
+  //   motor.setEffort(0);
+  // }
+  // motor.moveTo(-9500);
+  // Serial.println(motor.getPosition());
+  //  pickUpPanelRoof(RIGHT);
+
+  robotRun = FIRST_ROBOT;
+  side = RIGHT;
+
+  // if (didTheThing == true)
+  // {
+  //   placePlat(RIGHT);
+  // }
+  // // run();
+  // if (didTheThing == false && pickUpPanelRoof(RIGHT))
+  // {
+  //   didTheThing = true;
+  // }
+
+  // while (allowRun == true)
+  // {
+  //   if (keyPress == STOP_BUTTON) // TODO
+  //   {
+  //     allowRun = false;
+  //     drive.setEffort(0);
+  //     motor.setEffort(0);
+  //   }
+
+  //   if (run())
+  //   {
+  //     allowRun = false;
+  //   }
+  // }
+
+  // if (allowRun == false)
+  // {
+  //   startRobot();
+  // }
 }

@@ -1,9 +1,14 @@
 #include <MyUltraSonic.h>
 
-Rangefinder rangeFinder(2, 3);
+Rangefinder rangefinder(17, 3);
 
 MyUltraSonic::MyUltraSonic()
 {
+}
+
+void MyUltraSonic::initI()
+{
+    rangefinder.init();
 }
 
 /**
@@ -11,7 +16,7 @@ MyUltraSonic::MyUltraSonic()
  */
 float MyUltraSonic::getDistanceCM()
 {
-    return rangeFinder.getDistance();
+    return rangefinder.getDistance();
 }
 
 /**
@@ -19,5 +24,5 @@ float MyUltraSonic::getDistanceCM()
  */
 float MyUltraSonic::getDistanceIN()
 {
-    return rangeFinder.getDistance() * CENTI_CONV;
+    return rangefinder.getDistance() * CENTI_CONV;
 }

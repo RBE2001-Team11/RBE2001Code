@@ -6,9 +6,9 @@ class LineSensor
 {
 private:
     //port for left sensor
-    const int leftPort = A0; //TODO
+    const int leftPort = A3; //TODO
     //port for right sensor
-    const int rightPort = A2; //TODO
+    const int rightPort = A4; //TODO
 public:
     LineSensor();
     void attach();

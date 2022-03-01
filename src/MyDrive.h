@@ -29,10 +29,10 @@ private:
     const float FIND_BAG_DEAD = 5.0f;
 
     // base follow line speed
-    const float LINE_BASE_SPEED = 75;
+    const float LINE_BASE_SPEED = 50;
 
     // Kp for following the line
-    const float LINE_PROP = .09f;
+    const float LINE_PROP = .05f;
 
     // voltage value for determining if a sensor is over the line
     const float LINE_SENSE_BLACK = 700;
@@ -40,8 +40,8 @@ private:
     // max distance that the ultra will care about while scanning for a bag
     const float MAX_DIST = 25.0f;
 
-    const float DIST_FROM_ROOF = 0.0; // TODO
-    const float FINAL_ROOF_DRIVE = 0.0;
+    const float DIST_FROM_ROOF = 4; // TODO
+    const float FINAL_ROOF_DRIVE = 1;
 
     enum MovePanelState
     {
@@ -86,21 +86,21 @@ public:
     boolean crossSide(boolean side, float leftSense, float rightSense, float error);
 
     // medium drive speed
-    const float DRIVE_SPEED_MED = 180.0f;
+    const float DRIVE_SPEED_MED = 5.0f;
 
     // fast drive speed
-    const float DRIVE_SPEED_FAST = 270.0f;
+    const float DRIVE_SPEED_FAST = 8.0f;
 
     // slow drive speed
-    const float DRIVE_SPEED_SLOW = 70.0f;
+    const float DRIVE_SPEED_SLOW = 3.0f;
 
     // angle for preparing to align to the line with the light sensors
     const float PREP_ALIGN_ANGLE = 60.0f;
 
-    const float CENTER_ROBOT_DIST = 2.0f;
+    const float CENTER_ROBOT_DIST = 4.0f;
 
     // turn speed in degrees per second medium
-    const float TURN_SPEED_MED = 180.0f;
+    const float TURN_SPEED_MED = 100.0f;
 
     // turn speed in degrees per second
     const float TURN_SPEED_FAST = 270.0f;
