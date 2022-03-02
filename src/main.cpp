@@ -42,7 +42,7 @@ float curDistCM;
 // end sensor values ===================================================================
 
 // Start function variables +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++==
-boolean allowRun =false;
+boolean allowRun = false;
 
 // TODO enumerate
 boolean side = false;
@@ -208,22 +208,29 @@ boolean pickUpPanelRoof(RobotSide s)
     if (servo.closeJaw())
     {
       pickRoofState = REMOVE_PANEL;
-      if(s == RIGHT){
+      if (s == RIGHT)
+      {
         motor.setCount(motor.Side25Place);
-      } else {
+      }
+      else
+      {
         motor.setCount(motor.Side45Place);
       }
-      
     }
     break;
   case REMOVE_PANEL:
-    if (s == RIGHT) {
+    if (s == RIGHT)
+    {
       // motor.setCount(motor.Side25Place);
-      if (motor.moveTo(motor.Side25Prep)) {
+      if (motor.moveTo(motor.Side25Prep))
+      {
         pickRoofState = BACKUP;
       }
-    } else {
-      if (motor.moveTo(motor.Side45Prep)) {
+    }
+    else
+    {
+      if (motor.moveTo(motor.Side45Prep))
+      {
         pickRoofState = BACKUP;
       }
     }
@@ -264,14 +271,15 @@ boolean placePlat(RobotSide s)
   case TURN_1:
     if (s == RIGHT)
     {
-      if (drive.alignToLine(-1, leftSense,rightSense))
+      if (drive.alignToLine(1, leftSense, rightSense))
       {
         placePlatState = MOVE_PLAT;
       }
     }
     else
     {
-      if(drive.alignToLine(1, leftSense,rightSense)){
+      if (drive.alignToLine(-1, leftSense, rightSense))
+      {
         placePlatState = MOVE_PLAT;
       }
       // if (drive.turn(-90, drive.TURN_SPEED_MED))
@@ -281,8 +289,8 @@ boolean placePlat(RobotSide s)
     }
     break;
   case MOVE_PLAT:
-  //Serial.println("moving plat");
-    if (drive.lineFollowToTargetDistance(leftSense, rightSense, error, curDistIN, 9)) // TODO make constant once tested
+    // Serial.println("moving plat");
+    if (drive.lineFollowToTargetDistance(leftSense, rightSense, error, curDistCM, 9)) // TODO make constant once tested
     {
       placePlatState = MOVE_GRIP;
     }
@@ -366,23 +374,26 @@ boolean pickUpPlat(RobotSide s)
   case MOVE_START_PP:
     if (s == RIGHT)
     {
-      if(motor.moveTo(motor.Side25Prep)){
-          pickPlatState = MOVE_FORWARD_PP;
+      if (motor.moveTo(motor.Side25Prep))
+      {
+        pickPlatState = MOVE_FORWARD_PP;
       }
     }
     else
     {
-      if(motor.moveTo(motor.Side45Prep)){
+      if (motor.moveTo(motor.Side45Prep))
+      {
         pickPlatState = MOVE_FORWARD_PP;
       }
     }
     break;
 
   case MOVE_FORWARD_PP:
-    if (drive.lineFollowToTargetDistance(leftSense, rightSense, error, curDistIN, 10))
+    if (drive.lineFollowToTargetDistance(leftSense, rightSense, error, curDistCM, 20))
     // TODO distance
     {
       pickPlatState = FINISH_GRIP_MOVE_PP;
+      return true;
     }
     break;
 
@@ -400,7 +411,7 @@ boolean pickUpPlat(RobotSide s)
     {
       if (motor.moveTo(motor.Side45Place))
       {
-        //pickPlatState = WAIT_AND_CLOSE_PP;
+        // pickPlatState = WAIT_AND_CLOSE_PP;
         return true;
       }
     }
@@ -415,20 +426,21 @@ boolean placeRoof(RobotSide s)
   switch (placeRoofState)
   {
   case PREP_PANEL_PR:
-    if (s == RIGHT)
-    {
-      if (motor.moveTo(motor.Side25Prep))
-      {
-        placeRoofState = PLACE_PANEL_PR;
-      }
-    }
-    else
-    {
-      if (motor.moveTo(motor.Side45Prep))
-      {
-        placeRoofState = PLACE_PANEL_PR;
-      }
-    }
+    placeRoofState = PLACE_PANEL_PR;
+    // if (s == RIGHT)
+    // {
+    //   if (motor.moveTo(motor.Side25Prep))
+    //   {
+    //     placeRoofState = PLACE_PANEL_PR;
+    //   }
+    // }
+    // else
+    // {
+    //   if (motor.moveTo(motor.Side45Prep))
+    //   {
+    //     placeRoofState = PLACE_PANEL_PR;
+    //   }
+    // }
     break;
   case PLACE_PANEL_PR:
     if (s == RIGHT)
@@ -463,19 +475,21 @@ boolean placeRoof(RobotSide s)
   case TURN_PR:
     if (s == RIGHT)
     {
-      if (drive.turn(90, drive.TURN_SPEED_MED))
+      if (drive.turn(-90, drive.TURN_SPEED_MED))
       {
         placeRoofState = PREP_PANEL_PR;
+        return true;
       }
     }
     else
     {
-      if (drive.turn(-90, drive.TURN_SPEED_MED))
+      if (drive.turn(90, drive.TURN_SPEED_MED))
       {
         placeRoofState = PREP_PANEL_PR;
+        return true;
       }
     }
-    return true;
+
     break;
   }
   return false;
@@ -580,7 +594,7 @@ boolean startYes = false;
 void loop()
 {
   updateValues();
- // Serial.println(curDistCM);
+  Serial.println(curDistCM);
   // drive.movePanelPickUp(1, curDistIN, leftSense, rightSense, error);
   // Serial.println(decoder.getCode());
   // delay(100);
@@ -608,32 +622,33 @@ void loop()
   // Serial.println(motor.getPosition());
   //  pickUpPanelRoof(RIGHT);
 
-
   robotRun = FIRST_ROBOT;
   side = LEFT;
 
-  if(buttonB.isPressed()){
+  if (buttonB.isPressed())
+  {
     startYes = true;
   }
 
-  if(startYes){
-    if (didTheThing == false && pickUpPlat(LEFT)){
-      drive.setEffort(0);
-      //didTheThing = true;
-    }
+  if (startYes)
+  {
+    run();
+    // if (didTheThing == false && pickUpPlat(LEFT)){
+    //   drive.setEffort(0);
+    //   //didTheThing = true;
+    // }
 
-    if (didTheThing == true) {
-      if(placePlat(RIGHT)){
-        startYes = false;
-        drive.setEffort(0);
-      }
-    
-      allowRun = false;
-    }
+    // if (didTheThing == true) {
+    //   if(placePlat(RIGHT)){
+    //     startYes = false;
+    //     drive.setEffort(0);
+    //   }
+
+    //   allowRun = false;
+    // }
   }
 
   // run();
-  
 
   while (allowRun == true)
   {
@@ -654,5 +669,4 @@ void loop()
   // {
   //   startRobot();
   // }
-  
 }

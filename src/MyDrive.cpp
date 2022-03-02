@@ -287,7 +287,7 @@ boolean MyDrive::crossSide(boolean side, float leftSense, float rightSense, floa
     switch (crossSideState)
     {
     case DRIVE_ONE:
-        if (driveInches(8, DRIVE_SPEED_MED))
+        if (driveInches(12, DRIVE_SPEED_MED))
         {
             crossSideState = TURN_ONE;
         }
@@ -295,27 +295,27 @@ boolean MyDrive::crossSide(boolean side, float leftSense, float rightSense, floa
     case TURN_ONE:
         if (side == true)
         {
-            if (turn(-90, TURN_SPEED_MED))
+            if (turn(90, TURN_SPEED_MED))
             {
                 crossSideState = DRIVE_TAPE;
             }
         }
         else
         {
-            if (turn(90, TURN_SPEED_MED))
+            if (turn(-90, TURN_SPEED_MED))
             {
                 crossSideState = DRIVE_TAPE;
             }
         }
         break;
     case DRIVE_TAPE:
-        if (driveTillLine(DRIVE_SPEED_MED, leftSense, rightSense))
+        if (driveTillLine(DRIVE_SPEED_FAST, leftSense, rightSense))
         {
             crossSideState = CENTER;
         }
         break;
     case CENTER:
-        if (driveInches(2, DRIVE_SPEED_MED))
+        if (driveInches(CENTER_ROBOT_DIST, DRIVE_SPEED_MED))
         {
             crossSideState = TURN_TWOP;
         }
@@ -323,14 +323,14 @@ boolean MyDrive::crossSide(boolean side, float leftSense, float rightSense, floa
     case TURN_TWOP:
         if (side == true)
         {
-            if (turn(-90, TURN_SPEED_MED))
+            if (turn(90, TURN_SPEED_MED))
             {
                 crossSideState = DRIVE_SECT;
             }
         }
         else
         {
-            if (turn(90, TURN_SPEED_MED))
+            if (turn(-90, TURN_SPEED_MED))
             {
                 crossSideState = DRIVE_SECT;
             }
@@ -343,7 +343,7 @@ boolean MyDrive::crossSide(boolean side, float leftSense, float rightSense, floa
         }
         break;
     case CENTER_DOS:
-        if (driveInches(2, DRIVE_SPEED_MED))
+        if (driveInches(CENTER_ROBOT_DIST, DRIVE_SPEED_MED))
         {
             crossSideState = DRIVE_ONE;
         }

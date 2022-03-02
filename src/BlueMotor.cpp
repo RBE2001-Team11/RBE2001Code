@@ -162,7 +162,7 @@ float getRPM()
 boolean BlueMotor::moveTo(long target)
 {
 
-    Serial.println(getPosition());
+  //  Serial.println(getPosition());
     if (target < 0)
     {
         setEffortNoD((getPosition() - target) * kP);
