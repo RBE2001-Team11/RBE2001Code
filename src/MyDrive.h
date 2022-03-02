@@ -86,7 +86,7 @@ public:
     boolean crossSide(boolean side, float leftSense, float rightSense, float error);
 
     // medium drive speed
-    const float DRIVE_SPEED_MED = 5.0f;
+    const float DRIVE_SPEED_MED = 7.0f;
 
     // fast drive speed
     const float DRIVE_SPEED_FAST = 8.0f;
