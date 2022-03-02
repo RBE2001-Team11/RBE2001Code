@@ -379,7 +379,7 @@ boolean pickUpPlat(RobotSide s)
     break;
 
   case MOVE_FORWARD_PP:
-    if (drive.lineFollowToTargetDistance(leftSense, rightSense, error, curDistIN, 9))
+    if (drive.lineFollowToTargetDistance(leftSense, rightSense, error, curDistIN, 10))
     // TODO distance
     {
       pickPlatState = FINISH_GRIP_MOVE_PP;
