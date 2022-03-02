@@ -238,7 +238,7 @@ boolean MyDrive::alignToLine(int direct, float leftSense, float rightSense)
         }
     }
     // keep turning
-    turnContinuous(direct, TURN_SPEED_MED);
+    turnContinuous(direct, TURN_SPEED_SLOW);
     return false;
 }
 /**

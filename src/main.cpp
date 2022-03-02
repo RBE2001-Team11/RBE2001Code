@@ -136,6 +136,7 @@ enum PickPlatState
   CENTER_ROBOT_PP,
   TURN_ROOF_PP,
   MOVE_START_PP,
+  MOVE_FORWARD_PP,
   FINISH_GRIP_MOVE_PP
 };
 PickPlatState pickPlatState = WAIT_AND_CLOSE_PP;
@@ -234,7 +235,7 @@ boolean pickUpPanelRoof(RobotSide s)
     }
     break;
   case TURN_AROUND:
-    if (drive.turn(180, drive.TURN_SPEED_SLOW))
+    if (drive.alignToLine(-1, leftSense, rightSense))
     {
       pickRoofState = DRIVE_INTER;
     }
@@ -295,7 +296,6 @@ boolean placePlat(RobotSide s)
   case OPEN_JAW:
     if (servo.openJaw())
     {
-      placePlatState = CENTER;
       return true;
     }
     break;
@@ -313,6 +313,7 @@ boolean pickUpPlat(RobotSide s)
     {
       pickPlatState = CLOSE_GRIP_PP;
     }
+    pickPlatState = CLOSE_GRIP_PP;
     break;
   case CLOSE_GRIP_PP:
     if (servo.closeJaw())
@@ -327,7 +328,7 @@ boolean pickUpPlat(RobotSide s)
     }
     break;
   case TURN_AROUND_PP:
-    if (drive.turn(180, drive.TURN_SPEED_MED))
+    if (drive.alignToLine(-1, leftSense, rightSense))
     {
       pickPlatState = MOVE_TO_SECT_PP;
     }
@@ -349,39 +350,47 @@ boolean pickUpPlat(RobotSide s)
   case TURN_ROOF_PP:
     if (s == RIGHT)
     {
-      if (drive.turn(90, drive.TURN_SPEED_MED))
+      if (drive.alignToLine(-1, leftSense, rightSense))
       {
-        placePlatState = MOVE_PLAT;
+        pickPlatState = MOVE_START_PP;
       }
     }
     else
     {
-      if (drive.turn(-90, drive.TURN_SPEED_MED))
+      if (drive.alignToLine(1, leftSense, rightSense))
       {
-        placePlatState = MOVE_PLAT;
+        pickPlatState = MOVE_START_PP;
       }
     }
     break;
   case MOVE_START_PP:
     if (s == RIGHT)
     {
-      motor.holdTo(motor.Side45Prep);
+      if(motor.moveTo(motor.Side25Prep)){
+          pickPlatState = MOVE_FORWARD_PP;
+      }
     }
     else
     {
-      motor.holdTo(motor.Side25Prep);
+      if(motor.moveTo(motor.Side45Prep)){
+        pickPlatState = MOVE_FORWARD_PP;
+      }
     }
-    if (drive.lineFollowToTargetDistance(leftSense, rightSense, error, curDistIN, 3))
+    break;
+
+  case MOVE_FORWARD_PP:
+    if (drive.lineFollowToTargetDistance(leftSense, rightSense, error, curDistIN, 9))
     // TODO distance
     {
       pickPlatState = FINISH_GRIP_MOVE_PP;
     }
     break;
+
   case FINISH_GRIP_MOVE_PP:
 
     if (s == RIGHT)
     {
-      if (motor.moveTo(motor.Side45Prep))
+      if (motor.moveTo(motor.Side25Place))
       {
         pickPlatState = WAIT_AND_CLOSE_PP;
         return true;
@@ -389,9 +398,9 @@ boolean pickUpPlat(RobotSide s)
     }
     else
     {
-      if (motor.moveTo(motor.Side25Prep))
+      if (motor.moveTo(motor.Side45Place))
       {
-        pickPlatState = WAIT_AND_CLOSE_PP;
+        //pickPlatState = WAIT_AND_CLOSE_PP;
         return true;
       }
     }
@@ -608,12 +617,17 @@ void loop()
   }
 
   if(startYes){
-    if (didTheThing == false && pickUpPanelRoof(LEFT)){
-      didTheThing = true;
+    if (didTheThing == false && pickUpPlat(LEFT)){
+      drive.setEffort(0);
+      //didTheThing = true;
     }
 
     if (didTheThing == true) {
-      placePlat(RIGHT);
+      if(placePlat(RIGHT)){
+        startYes = false;
+        drive.setEffort(0);
+      }
+    
       allowRun = false;
     }
   }
